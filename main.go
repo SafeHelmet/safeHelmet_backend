@@ -40,10 +40,19 @@ func main() {
 	r.GET("/worksites/:worksiteId/readings/anomalous", getAnomalousReadings)
 	r.POST("/worksites/:worksiteId/workers", assignWorkerToWorksite)
 
+	// test
+	r.GET("/test", test)
+
 	// Avvia il server sulla porta 8080
 	if err := r.Run(":8080"); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func test(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "paolo bellavista gran frocio",
+	})
 }
 
 // Elenco dei Lavoratori in un Cantiere
