@@ -1,94 +1,94 @@
 # API Documentation
 
-## **Lavoratori e Cantieri**
+## **Workers and Worksites**
 
-### Lista dei lavoratori in un cantiere
+### List of Workers in a Worksite
 - **Endpoint:** `GET /worksites/:worksiteId/workers`
-- **Descrizione:** Restituisce l'elenco dei lavoratori attualmente assegnati al cantiere specificato.
-- **Parametri:**
-  - `worksiteId` (path): ID del cantiere.
+- **Description:** Returns the list of workers currently assigned to the specified worksite.
+- **Parameters:**
+  - `worksiteId` (path): ID of the worksite.
 
 ---
 
-### Dettagli lavoratore
+### Worker Details
 - **Endpoint:** `GET /workers/:workerId`
-- **Descrizione:** Restituisce i dettagli di un lavoratore, incluse specializzazioni e assegnazioni attuali.
-- **Parametri:**
-  - `workerId` (path): ID del lavoratore.
+- **Description:** Returns details about a worker, including specializations and current assignments.
+- **Parameters:**
+  - `workerId` (path): ID of the worker.
 
 ---
 
-## **Letture**
+## **Readings**
 
-### Letture specifiche per operaio, cantiere e giorno
+### Specific Readings for Worker, Worksite, and Date
 - **Endpoint:** `GET /workers/:workerId/worksites/:worksiteId/readings`
-- **Descrizione:** Ottieni le letture di un casco associato a un lavoratore per un determinato cantiere e giorno.
-- **Parametri:**
-  - `workerId` (path): ID del lavoratore.
-  - `worksiteId` (path): ID del cantiere.
-  - `date` (query): Data specifica in formato `YYYY-MM-DD`.
+- **Description:** Retrieves helmet readings associated with a worker for a specific worksite and date.
+- **Parameters:**
+  - `workerId` (path): ID of the worker.
+  - `worksiteId` (path): ID of the worksite.
+  - `date` (query): Specific date in `YYYY-MM-DD` format.
 
 ---
 
-### Letture di un cantiere in una finestra temporale
+### Worksite Readings in a Time Window
 - **Endpoint:** `GET /worksites/:worksiteId/readings`
-- **Descrizione:** Restituisce tutte le letture di un cantiere in un intervallo temporale.
-- **Parametri:**
-  - `worksiteId` (path): ID del cantiere.
-  - `from` (query): Inizio finestra temporale (`YYYY-MM-DD HH:mm:ss`).
-  - `to` (query): Fine finestra temporale (`YYYY-MM-DD HH:mm:ss`).
+- **Description:** Returns all readings for a worksite within a specified time window.
+- **Parameters:**
+  - `worksiteId` (path): ID of the worksite.
+  - `from` (query): Start of the time window (`YYYY-MM-DD HH:mm:ss`).
+  - `to` (query): End of the time window (`YYYY-MM-DD HH:mm:ss`).
 
 ---
 
-### Letture anomale di un cantiere
+### Anomalous Readings for a Worksite
 - **Endpoint:** `GET /worksites/:worksiteId/readings/anomalous`
-- **Descrizione:** Restituisce tutte le letture anomale associate a un cantiere.
-- **Parametri:**
-  - `worksiteId` (path): ID del cantiere.
+- **Description:** Returns all anomalous readings associated with a worksite.
+- **Parameters:**
+  - `worksiteId` (path): ID of the worksite.
 
 ---
 
-### Letture anomale di un lavoratore
+### Anomalous Readings for a Worker
 - **Endpoint:** `GET /workers/:workerId/readings/anomalous`
-- **Descrizione:** Restituisce tutte le letture anomale associate a un lavoratore.
-- **Parametri:**
-  - `workerId` (path): ID del lavoratore.
+- **Description:** Returns all anomalous readings associated with a worker.
+- **Parameters:**
+  - `workerId` (path): ID of the worker.
 
 ---
 
-### Ore di funzionamento del casco in una finestra temporale
+### Helmet Operating Hours in a Time Window
 - **Endpoint:** `GET /helmets/:helmetId/operating-hours`
-- **Descrizione:** Calcola le ore di funzionamento di un casco in un intervallo temporale.
-- **Parametri:**
-  - `helmetId` (path): ID del casco.
-  - `from` (query): Inizio finestra temporale (`YYYY-MM-DD HH:mm:ss`).
-  - `to` (query): Fine finestra temporale (`YYYY-MM-DD HH:mm:ss`).
+- **Description:** Calculates the operating hours of a helmet within a specified time window.
+- **Parameters:**
+  - `helmetId` (path): ID of the helmet.
+  - `from` (query): Start of the time window (`YYYY-MM-DD HH:mm:ss`).
+  - `to` (query): End of the time window (`YYYY-MM-DD HH:mm:ss`).
 
 ---
 
-### Tutte le letture di un casco in una finestra temporale
+### All Helmet Readings in a Time Window
 - **Endpoint:** `GET /helmets/:helmetId/readings`
-- **Descrizione:** Restituisce tutte le letture di un casco in un intervallo temporale.
-- **Parametri:**
-  - `helmetId` (path): ID del casco.
-  - `from` (query): Inizio finestra temporale (`YYYY-MM-DD HH:mm:ss`).
-  - `to` (query): Fine finestra temporale (`YYYY-MM-DD HH:mm:ss`).
+- **Description:** Returns all readings for a helmet within a specified time window.
+- **Parameters:**
+  - `helmetId` (path): ID of the helmet.
+  - `from` (query): Start of the time window (`YYYY-MM-DD HH:mm:ss`).
+  - `to` (query): End of the time window (`YYYY-MM-DD HH:mm:ss`).
 
 ---
 
-## **Gestione e Configurazione**
+## **Management and Configuration**
 
-### Lista dei cantieri
+### List of Worksites
 - **Endpoint:** `GET /worksites`
-- **Descrizione:** Restituisce l'elenco di tutti i cantieri attivi.
+- **Description:** Returns a list of all active worksites.
 
 ---
 
-### Assegna lavoratore a cantiere
+### Assign Worker to Worksite
 - **Endpoint:** `POST /worksites/:worksiteId/workers`
-- **Descrizione:** Assegna un lavoratore a un cantiere con un casco specifico.
-- **Parametri:**
-  - `worksiteId` (path): ID del cantiere.
+- **Description:** Assigns a worker to a worksite with a specific helmet.
+- **Parameters:**
+  - `worksiteId` (path): ID of the worksite.
 - **Body:**
   ```json
   {
