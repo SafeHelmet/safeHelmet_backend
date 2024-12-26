@@ -5,17 +5,11 @@ import (
 	"os"
 	"safecap_backend/models"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func GetDSN() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	// Configura la connessione al database PostgreSQL
 	return "host=" + os.Getenv("DB_HOST") +
 		" user=" + os.Getenv("DB_USER") +

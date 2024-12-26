@@ -6,10 +6,11 @@ import (
 	"safecap_backend/config"
 	"safecap_backend/routes"
 	"safecap_backend/utils"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	var err error
 	toseed := "false"
 
 	// Verifica se è stato passato un argomento da riga di comando
@@ -17,12 +18,17 @@ func main() {
 		toseed = os.Args[1]
 	}
 
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	db := config.ConnectToDB(config.GetDSN())
 	config.Migrate(db)
 
 	if toseed == "true" {
 		utils.DeleteTables(db)
-		err = utils.SeedDatabase(db)
+		err := utils.SeedDatabase(db)
 		if err != nil {
 			log.Fatal("Failed to seed database:", err)
 		}
