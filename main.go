@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"safecap_backend/config"
+	"safecap_backend/controllers"
 	"safecap_backend/routes"
 	"safecap_backend/utils"
 
@@ -25,6 +26,8 @@ func main() {
 
 	db := config.ConnectToDB(config.GetDSN())
 	config.Migrate(db)
+	// TODO scelta discutibile
+	controllers.InitDatabase(db)
 
 	if toseed == "true" {
 		utils.DeleteTables(db)
