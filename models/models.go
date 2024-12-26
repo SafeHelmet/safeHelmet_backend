@@ -39,13 +39,14 @@ type HelmetCategory struct {
 	Name string `json:"name" gorm:"not null"`
 }
 
+// TODO: i float32 possono essere int32
 type Reading struct {
 	ID        int       `json:"id" gorm:"primaryKey"`
 	ReadAt    time.Time `json:"read_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
 	HelmetID  int       `json:"helmet_id" gorm:"not null"`
-	Sensor1   float64   `json:"sensor1"`
-	Sensor2   float64   `json:"sensor2"`
-	Sensor3   float64   `json:"sensor3"`
+	Sensor1   float32   `json:"sensor1"`
+	Sensor2   float32   `json:"sensor2"`
+	Sensor3   float32   `json:"sensor3"`
 	Anomalous bool      `json:"anomalous"`
 	Helmet    Helmet    `gorm:"foreignKey:HelmetID;references:ID"`
 }
