@@ -14,10 +14,11 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		log.Fatal("Missing argument: toseed")
+	toseed := "false"
+	if len(os.Args) == 1 {
+		toseed = os.Args[1]
 	}
-	toseed := os.Args[1] // Ottieni il valore del parametro toseed
+	// Ottieni il valore del parametro toseed
 
 	// Configura la connessione al database PostgreSQL
 	dsn := "host=dpg-ctm3uljv2p9s73f9h470-a.frankfurt-postgres.render.com user=safehelmet_db_user password=lBmeOC0lvxjawRiRD5L1pAvRezYH8LPu dbname=safehelmet_db port=5432 TimeZone=Europe/Rome"
@@ -26,7 +27,9 @@ func main() {
 		log.Fatal("Failed to connect to database:", err)
 	}
 
-	db.Exec("DROP DATABASE safehelmet_db WITH (FORCE);")
+	if toseed == "true" {
+		db.Exec("DROP DATABASE safehelmet_db WITH (FORCE);")
+	}
 
 	// Migrazione delle strutture
 	err = db.AutoMigrate(
