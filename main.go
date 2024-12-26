@@ -3,34 +3,68 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+	"safecap_backend/models"
+	"safecap_backend/utils"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-// Simulazione dei dati
-var workers = map[string][]string{
-	"worksite1": {"worker1", "worker2"},
-	"worksite2": {"worker3", "worker4"},
-}
-
-var workerDetails = map[string]map[string]interface{}{
-	"worker1": {"specialization": "electrician", "assignments": []string{"worksite1"}},
-	"worker2": {"specialization": "plumber", "assignments": []string{"worksite1"}},
-}
-
-var readings = map[string]map[string]map[string]interface{}{
-	"worker1": {
-		"worksite1": {"2024-12-25": []string{"reading1", "reading2"}},
-	},
-	"worker2": {
-		"worksite1": {"2024-12-25": []string{"reading3", "reading4"}},
-	},
-}
-
-// Main handler function to initialize the server
 func main() {
+	if len(os.Args) < 2 {
+		log.Fatal("Missing argument: toseed")
+	}
+	toseed := os.Args[1] // Ottieni il valore del parametro toseed
+
+	// Configura la connessione al database PostgreSQL
+	dsn := "host=dpg-ctm3uljv2p9s73f9h470-a.frankfurt-postgres.render.com user=safehelmet_db_user password=lBmeOC0lvxjawRiRD5L1pAvRezYH8LPu dbname=safehelmet_db port=5432 TimeZone=Europe/Rome"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal("Failed to connect to database:", err)
+	}
+
+	db.Exec("DROP DATABASE safehelmet_db WITH (FORCE);")
+
+	// Migrazione delle strutture
+	err = db.AutoMigrate(
+		&models.Worksite{},
+		&models.Worker{},
+		&models.Specialization{},
+		&models.WorkerSpecialization{},
+		&models.Helmet{},
+		&models.HelmetCategory{},
+		&models.Reading{},
+		&models.WorkerWorksiteAssignment{},
+		&models.WorksiteBossAssignment{},
+	)
+	if err != nil {
+		log.Fatal("Failed to migrate database:", err)
+	}
+
+	log.Println("Database migrated successfully")
+
+	if toseed == "true" {
+		// Popola il database con dati di esempio
+		err = utils.SeedDatabase(db)
+		if err != nil {
+			log.Fatal("Failed to seed database:", err)
+		}
+		log.Println("Database seeded successfully")
+	}
+
 	// Crea un router Gin
 	r := gin.Default()
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:4200", "TODO"}, // Domini consentiti
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 
 	// Definisci gli endpoint
 	r.GET("/worksites/:worksiteId/workers", getWorkers)
@@ -41,7 +75,9 @@ func main() {
 	r.POST("/worksites/:worksiteId/workers", assignWorkerToWorksite)
 
 	// test
-	r.GET("/test", test)
+	r.GET("/test", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "test successful"})
+	})
 
 	// Avvia il server sulla porta 8080
 	if err := r.Run(":8080"); err != nil {
@@ -49,111 +85,45 @@ func main() {
 	}
 }
 
-func test(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "paolo bellavista gran frocio",
-	})
-}
-
 // Elenco dei Lavoratori in un Cantiere
 func getWorkers(c *gin.Context) {
 	worksiteId := c.Param("worksiteId")
-
-	// Verifica se il worksiteId esiste
-	if workers, exists := workers[worksiteId]; exists {
-		c.JSON(http.StatusOK, gin.H{
-			"worksiteId": worksiteId,
-			"workers":    workers,
-		})
-	} else {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Worksite not found"})
-	}
+	// Implementa la logica per ottenere i lavoratori di un cantiere
+	c.JSON(http.StatusOK, gin.H{"worksiteId": worksiteId})
 }
 
 // Dettagli di un Lavoratore
 func getWorkerDetails(c *gin.Context) {
 	workerId := c.Param("workerId")
-
-	// Verifica se il lavoratore esiste
-	if details, exists := workerDetails[workerId]; exists {
-		c.JSON(http.StatusOK, gin.H{
-			"workerId":       workerId,
-			"specialization": details["specialization"],
-			"assignments":    details["assignments"],
-		})
-	} else {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Worker not found"})
-	}
+	// Implementa la logica per ottenere i dettagli di un lavoratore
+	c.JSON(http.StatusOK, gin.H{"workerId": workerId})
 }
 
-// Letture di un Casco per un Lavoratore in un Cantiere
+// Letture di un Lavoratore in un Cantiere
 func getReadings(c *gin.Context) {
 	workerId := c.Param("workerId")
 	worksiteId := c.Param("worksiteId")
-	date := c.DefaultQuery("date", "2024-12-25") // Data con valore di default
-
-	// Verifica se esistono letture per quel lavoratore, cantiere e data
-	if workerReadings, exists := readings[workerId]; exists {
-		if worksiteReadings, exists := workerReadings[worksiteId]; exists {
-			if readings, exists := worksiteReadings[date]; exists {
-				c.JSON(http.StatusOK, gin.H{
-					"workerId":   workerId,
-					"worksiteId": worksiteId,
-					"date":       date,
-					"readings":   readings,
-				})
-				return
-			}
-		}
-	}
-
-	c.JSON(http.StatusNotFound, gin.H{"error": "Readings not found"})
+	// Implementa la logica per ottenere le letture di un lavoratore in un cantiere
+	c.JSON(http.StatusOK, gin.H{"workerId": workerId, "worksiteId": worksiteId})
 }
 
-// Letture di un Cantiere in un Intervallo Temporale
+// Letture di un Cantiere
 func getWorksiteReadings(c *gin.Context) {
 	worksiteId := c.Param("worksiteId")
-	from := c.DefaultQuery("from", "2024-12-01 00:00:00")
-	to := c.DefaultQuery("to", "2024-12-01 23:59:59")
-
-	// Qui simuliamo che ci siano letture per il worksite, in una vera implementazione ci sarebbe una query al DB
-	c.JSON(http.StatusOK, gin.H{
-		"worksiteId": worksiteId,
-		"from":       from,
-		"to":         to,
-		"readings":   []string{"reading1", "reading2"}, // Letture fittizie
-	})
+	// Implementa la logica per ottenere le letture di un cantiere
+	c.JSON(http.StatusOK, gin.H{"worksiteId": worksiteId})
 }
 
 // Letture Anomale di un Cantiere
 func getAnomalousReadings(c *gin.Context) {
 	worksiteId := c.Param("worksiteId")
-	// Simuliamo letture anomale per il worksite
-	c.JSON(http.StatusOK, gin.H{
-		"worksiteId":        worksiteId,
-		"anomalousReadings": []string{"anomalousReading1", "anomalousReading2"},
-	})
+	// Implementa la logica per ottenere le letture anomale di un cantiere
+	c.JSON(http.StatusOK, gin.H{"worksiteId": worksiteId})
 }
 
-// Assegna un Lavoratore a un Cantiere con un Casco Specifico
+// Assegna un Lavoratore a un Cantiere
 func assignWorkerToWorksite(c *gin.Context) {
 	worksiteId := c.Param("worksiteId")
-	var requestBody struct {
-		WorkerId int `json:"workerId"`
-		HelmetId int `json:"helmetId"`
-	}
-
-	// Legge il corpo della richiesta (in JSON)
-	if err := c.ShouldBindJSON(&requestBody); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	// Simula l'assegnazione del lavoratore al cantiere
-	c.JSON(http.StatusOK, gin.H{
-		"message":    "Worker assigned successfully",
-		"workerId":   requestBody.WorkerId,
-		"helmetId":   requestBody.HelmetId,
-		"worksiteId": worksiteId,
-	})
+	// Implementa la logica per assegnare un lavoratore a un cantiere
+	c.JSON(http.StatusOK, gin.H{"worksiteId": worksiteId})
 }
