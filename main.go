@@ -15,10 +15,10 @@ import (
 
 func main() {
 	toseed := "false"
-	if len(os.Args) == 1 {
+
+	if len(os.Args) >= 2 {
 		toseed = os.Args[1]
 	}
-	// Ottieni il valore del parametro toseed
 
 	// Configura la connessione al database PostgreSQL
 	dsn := "host=dpg-ctm3uljv2p9s73f9h470-a.frankfurt-postgres.render.com user=safehelmet_db_user password=lBmeOC0lvxjawRiRD5L1pAvRezYH8LPu dbname=safehelmet_db port=5432 TimeZone=Europe/Rome"
