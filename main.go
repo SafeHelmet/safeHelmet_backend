@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -16,19 +17,39 @@ import (
 func main() {
 	toseed := "false"
 
+	// Verifica se è stato passato un argomento da riga di comando
 	if len(os.Args) >= 2 {
 		toseed = os.Args[1]
 	}
 
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	// Configura la connessione al database PostgreSQL
-	dsn := "host=dpg-ctm3uljv2p9s73f9h470-a.frankfurt-postgres.render.com user=safehelmet_db_user password=lBmeOC0lvxjawRiRD5L1pAvRezYH8LPu dbname=safehelmet_db port=5432 TimeZone=Europe/Rome"
+	dsn := "host=" + os.Getenv("DB_HOST") +
+		" user=" + os.Getenv("DB_USER") +
+		" password=" + os.Getenv("DB_PASSWORD") +
+		" dbname=" + os.Getenv("DB_NAME") +
+		" port=" + os.Getenv("DB_PORT") +
+		" TimeZone=" + os.Getenv("DB_TIMEZONE")
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
 
 	if toseed == "true" {
-		db.Exec("DROP DATABASE safehelmet_db WITH (FORCE);")
+		db.Exec("DELETE FROM worksites")
+		db.Exec("DELETE FROM workers")
+		db.Exec("DELETE FROM specializations")
+		db.Exec("DELETE FROM worker_specializations")
+		db.Exec("DELETE FROM helmet_categories")
+		db.Exec("DELETE FROM helmets")
+		db.Exec("DELETE FROM readings")
+		db.Exec("DELETE FROM worksite_boss_assignments")
+		db.Exec("DELETE FROM worker_worksite_assignments")
 	}
 
 	// Migrazione delle strutture
@@ -62,7 +83,7 @@ func main() {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:4200", "TODO"}, // Domini consentiti
+		AllowOrigins:     []string{"http://localhost:4200"}, // Domini consentiti
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
