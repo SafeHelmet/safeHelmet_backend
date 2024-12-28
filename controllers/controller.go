@@ -95,7 +95,7 @@ func GetAllWorkerWorksiteAssignments(c *gin.Context) {
 func GetAllWorksiteBossAssignments(c *gin.Context) {
 	var assignments []models.WorksiteBossAssignment
 
-	if err := db.Find(&assignments).Error; err != nil {
+	if err := db.Preload("Boss").Preload("Worksite").Find(&assignments).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
