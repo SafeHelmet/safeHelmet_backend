@@ -59,7 +59,7 @@ func GetWorksiteReadings(c *gin.Context) {
 }
 
 func AssignWorkerToWorksite(c *gin.Context) {
-	var assignment models.WorkerWorksiteAssignment
+	var assignment models.WorksiteWorkerAssignment
 
 	// Binding dei dati JSON della richiesta alla struttura
 	if err := c.ShouldBindJSON(&assignment); err != nil {

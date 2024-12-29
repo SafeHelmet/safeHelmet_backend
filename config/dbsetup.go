@@ -29,8 +29,9 @@ func Migrate(db *gorm.DB) {
 		&models.Helmet{},
 		&models.HelmetCategory{},
 		&models.Reading{},
-		&models.WorkerWorksiteAssignment{},
+		&models.WorksiteWorkerAssignment{},
 		&models.WorksiteBossAssignment{},
+		&models.WorkerAttendance{},
 	)
 	if err != nil {
 		log.Fatal("Failed to migrate database:", err)
