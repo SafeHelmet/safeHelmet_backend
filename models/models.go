@@ -3,12 +3,22 @@ package models
 import "time"
 
 type Worksite struct {
-	ID        int       `json:"id" gorm:"primaryKey"`
-	Name      string    `json:"name" gorm:"not null"`
-	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	ID              int       `json:"id" gorm:"primaryKey"`
+	Name            string    `json:"name" gorm:"not null"`
+	CreatedAt       time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	Latitude        float64   `json:"latitude"`
+	Longitude       float64   `json:"longitude"`
+	StartDateOfWork time.Time `json:"start_date_of_work"`
+	EndDateOfWork   time.Time `json:"end_date_of_work"`
 }
 
 type Worker struct {
+	ID      int    `json:"id" gorm:"primaryKey"`
+	Name    string `json:"name" gorm:"not null"`
+	Surname string `json:"surname" gorm:"not null"`
+}
+
+type Boss struct {
 	ID      int    `json:"id" gorm:"primaryKey"`
 	Name    string `json:"name" gorm:"not null"`
 	Surname string `json:"surname" gorm:"not null"`
@@ -39,7 +49,6 @@ type HelmetCategory struct {
 	Name string `json:"name" gorm:"not null"`
 }
 
-// TODO: i float32 possono essere int32
 type Reading struct {
 	ID        int       `json:"id" gorm:"primaryKey"`
 	ReadAt    time.Time `json:"read_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
@@ -51,12 +60,12 @@ type Reading struct {
 	Helmet    Helmet    `gorm:"foreignKey:HelmetID;references:ID"`
 }
 
-type WorkerWorksiteAssignment struct {
+type WorkerAttendance struct {
 	ID         int        `json:"id" gorm:"primaryKey"`
 	WorkerID   int        `json:"worker_id" gorm:"not null"`
 	WorksiteID int        `json:"worksite_id" gorm:"not null"`
-	AssignedAt time.Time  `json:"assigned_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
-	ReleasedAt *time.Time `json:"released_at"`
+	StartAt    time.Time  `json:"start_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
+	EndAt      *time.Time `json:"end_at"`
 	HelmetID   int        `json:"helmet_id"`
 	Worker     Worker     `gorm:"foreignKey:WorkerID;references:ID"`
 	Worksite   Worksite   `gorm:"foreignKey:WorksiteID;references:ID"`
@@ -69,16 +78,18 @@ type WorksiteBossAssignment struct {
 	WorksiteID int        `json:"worksite_id" gorm:"not null"`
 	AssignedAt time.Time  `json:"assigned_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
 	ReleasedAt *time.Time `json:"released_at"`
-	Boss       Worker     `gorm:"foreignKey:BossID;references:ID"`
+	Boss       Boss       `gorm:"foreignKey:BossID;references:ID"`
 	Worksite   Worksite   `gorm:"foreignKey:WorksiteID;references:ID"`
 }
 
-type WorkerWorksitePlan struct {
-	ID         int                  `json:"id" gorm:"primaryKey"`
-	WorkerID   int                  `json:"worker_id" gorm:"not null"`
-	WorksiteID int                  `json:"worksite_id" gorm:"not null"`
-	InsertAt   time.Time            `json:"planned_start" gorm:"not null"` // Data di inizio pianificata
-	*time.Time `json:"planned_end"` // Data di fine pianificata
-	Worker     Worker               `gorm:"foreignKey:WorkerID;references:ID"`
-	Worksite   Worksite             `gorm:"foreignKey:WorksiteID;references:ID"`
+type WorksiteWorkerAssignment struct {
+	ID         int        `json:"id" gorm:"primaryKey"`
+	WorksiteID int        `json:"worksite_id" gorm:"not null"`
+	WorkerID   int        `json:"worker_id" gorm:"not null"`
+	AssignedBy int        `json:"assigned_by" gorm:"not null"`
+	AssignedAt time.Time  `json:"assigned_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
+	ReleasedAt *time.Time `json:"released_at"`
+	Worksite   Worksite   `gorm:"foreignKey:WorksiteID;references:ID"`
+	Worker     Worker     `gorm:"foreignKey:WorkerID;references:ID"`
+	Boss       Boss       `gorm:"foreignKey:AssignedBy;references:ID"`
 }
