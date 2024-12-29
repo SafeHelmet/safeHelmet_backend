@@ -36,7 +36,7 @@ func GetWorkerDetails(c *gin.Context) {
 }
 
 func GetAllBosses(c *gin.Context) {
-	var bosses []models.Worker
+	var bosses []models.Boss
 
 	if err := db.Find(&bosses).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
