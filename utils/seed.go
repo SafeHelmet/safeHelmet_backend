@@ -46,16 +46,16 @@ func SeedDatabase(db *gorm.DB) error {
 
 	// Crea record di esempio per la tabella Boss
 	bosses := []models.Boss{
-		{Name: "John", Surname: "Doe"},
-		{Name: "Jane", Surname: "Smith"},
-		{Name: "Alice", Surname: "Johnson"},
-		{Name: "Bob", Surname: "Brown"},
-		{Name: "Charlie", Surname: "Davis"},
-		{Name: "David", Surname: "Wilson"},
-		{Name: "Eve", Surname: "Taylor"},
-		{Name: "Frank", Surname: "Anderson"},
-		{Name: "Grace", Surname: "Thomas"},
-		{Name: "Hank", Surname: "Jackson"},
+		{Name: "BOSSJohn", Surname: "Doe"},
+		{Name: "BOSSJane", Surname: "Smith"},
+		{Name: "BOSSAlice", Surname: "Johnson"},
+		{Name: "BOSSBob", Surname: "Brown"},
+		{Name: "BOSSCharlie", Surname: "Davis"},
+		{Name: "BOSSDavid", Surname: "Wilson"},
+		{Name: "BOSSEve", Surname: "Taylor"},
+		{Name: "BOSSFrank", Surname: "Anderson"},
+		{Name: "BOSSGrace", Surname: "Thomas"},
+		{Name: "BOSSHank", Surname: "Jackson"},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&bosses).Error; err != nil {
 		return err
