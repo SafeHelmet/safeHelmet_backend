@@ -72,3 +72,13 @@ type WorksiteBossAssignment struct {
 	Boss       Worker     `gorm:"foreignKey:BossID;references:ID"`
 	Worksite   Worksite   `gorm:"foreignKey:WorksiteID;references:ID"`
 }
+
+type WorkerWorksitePlan struct {
+	ID         int                  `json:"id" gorm:"primaryKey"`
+	WorkerID   int                  `json:"worker_id" gorm:"not null"`
+	WorksiteID int                  `json:"worksite_id" gorm:"not null"`
+	InsertAt   time.Time            `json:"planned_start" gorm:"not null"` // Data di inizio pianificata
+	*time.Time `json:"planned_end"` // Data di fine pianificata
+	Worker     Worker               `gorm:"foreignKey:WorkerID;references:ID"`
+	Worksite   Worksite             `gorm:"foreignKey:WorksiteID;references:ID"`
+}

@@ -57,3 +57,21 @@ func GetWorksiteReadings(c *gin.Context) {
 
 	c.JSON(http.StatusOK, readings)
 }
+
+func AssignWorkerToWorksite(c *gin.Context) {
+	var assignment models.WorkerWorksiteAssignment
+
+	// Binding dei dati JSON della richiesta alla struttura
+	if err := c.ShouldBindJSON(&assignment); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Creazione dell'assegnazione nel database
+	if err := db.Create(&assignment).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, assignment)
+}
