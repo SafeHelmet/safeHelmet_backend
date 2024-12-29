@@ -44,6 +44,23 @@ func SeedDatabase(db *gorm.DB) error {
 		return err
 	}
 
+	// Crea record di esempio per la tabella Boss
+	bosses := []models.Boss{
+		{Name: "John", Surname: "Doe"},
+		{Name: "Jane", Surname: "Smith"},
+		{Name: "Alice", Surname: "Johnson"},
+		{Name: "Bob", Surname: "Brown"},
+		{Name: "Charlie", Surname: "Davis"},
+		{Name: "David", Surname: "Wilson"},
+		{Name: "Eve", Surname: "Taylor"},
+		{Name: "Frank", Surname: "Anderson"},
+		{Name: "Grace", Surname: "Thomas"},
+		{Name: "Hank", Surname: "Jackson"},
+	}
+	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&bosses).Error; err != nil {
+		return err
+	}
+
 	// Crea record di esempio per la tabella Specialization
 	specializations := []models.Specialization{
 		{Name: "Electrician"},
@@ -135,8 +152,8 @@ func SeedDatabase(db *gorm.DB) error {
 		return err
 	}
 
-	// Crea record di esempio per la tabella WorkerWorksiteAssignment
-	workerWorksiteAssignments := []models.WorkerWorksiteAssignment{
+	// Crea record di esempio per la tabella WorkerAttendance
+	workerAttendances := []models.WorkerAttendance{
 		{WorkerID: workersFromDB[0].ID, WorksiteID: worksites[0].ID, HelmetID: helmetsFromDB[0].ID},
 		{WorkerID: workersFromDB[1].ID, WorksiteID: worksites[1].ID, HelmetID: helmetsFromDB[1].ID},
 		{WorkerID: workersFromDB[2].ID, WorksiteID: worksites[2].ID, HelmetID: helmetsFromDB[2].ID},
@@ -148,7 +165,7 @@ func SeedDatabase(db *gorm.DB) error {
 		{WorkerID: workersFromDB[8].ID, WorksiteID: worksites[8].ID, HelmetID: helmetsFromDB[8].ID},
 		{WorkerID: workersFromDB[9].ID, WorksiteID: worksites[9].ID, HelmetID: helmetsFromDB[9].ID},
 	}
-	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&workerWorksiteAssignments).Error; err != nil {
+	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&workerAttendances).Error; err != nil {
 		return err
 	}
 
@@ -166,6 +183,23 @@ func SeedDatabase(db *gorm.DB) error {
 		{BossID: workersFromDB[9].ID, WorksiteID: worksites[9].ID},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&worksiteBossAssignments).Error; err != nil {
+		return err
+	}
+
+	// Crea record di esempio per la tabella WorksiteWorkerAssignment
+	worksiteWorkerAssignments := []models.WorksiteWorkerAssignment{
+		{WorksiteID: worksites[0].ID, WorkerID: workersFromDB[0].ID, AssignedBy: bosses[0].ID},
+		{WorksiteID: worksites[1].ID, WorkerID: workersFromDB[1].ID, AssignedBy: bosses[1].ID},
+		{WorksiteID: worksites[2].ID, WorkerID: workersFromDB[2].ID, AssignedBy: bosses[2].ID},
+		{WorksiteID: worksites[3].ID, WorkerID: workersFromDB[3].ID, AssignedBy: bosses[3].ID},
+		{WorksiteID: worksites[4].ID, WorkerID: workersFromDB[4].ID, AssignedBy: bosses[4].ID},
+		{WorksiteID: worksites[5].ID, WorkerID: workersFromDB[5].ID, AssignedBy: bosses[5].ID},
+		{WorksiteID: worksites[6].ID, WorkerID: workersFromDB[6].ID, AssignedBy: bosses[6].ID},
+		{WorksiteID: worksites[7].ID, WorkerID: workersFromDB[7].ID, AssignedBy: bosses[7].ID},
+		{WorksiteID: worksites[8].ID, WorkerID: workersFromDB[8].ID, AssignedBy: bosses[8].ID},
+		{WorksiteID: worksites[9].ID, WorkerID: workersFromDB[9].ID, AssignedBy: bosses[9].ID},
+	}
+	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&worksiteWorkerAssignments).Error; err != nil {
 		return err
 	}
 
