@@ -9,13 +9,14 @@ import (
 
 func GetAllWorksites(c *gin.Context) {
 	var worksites []models.Worksite
+	var count int64
 
-	if err := db.Find(&worksites).Error; err != nil {
+	if err := db.Find(&worksites).Count(&count).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, worksites)
+	c.JSON(http.StatusOK, gin.H{"total": count, "worksites": worksites})
 }
 
 func GetWorksiteDetails(c *gin.Context) {
