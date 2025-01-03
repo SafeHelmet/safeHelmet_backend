@@ -76,3 +76,21 @@ func AssignWorkerToWorksite(c *gin.Context) {
 
 	c.JSON(http.StatusOK, assignment)
 }
+
+func CreateWorksite(c *gin.Context) {
+	var worksite models.Worksite
+
+	// Binding dei dati JSON della richiesta alla struttura
+	if err := c.ShouldBindJSON(&worksite); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Creazione del cantiere nel database
+	if err := db.Create(&worksite).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, worksite)
+}
