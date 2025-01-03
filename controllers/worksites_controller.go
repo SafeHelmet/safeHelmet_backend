@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"safecap_backend/models"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +21,13 @@ func GetAllWorksites(c *gin.Context) {
 }
 
 func GetWorksiteDetails(c *gin.Context) {
-	worksiteId := c.Param("worksiteId")
+	worksiteIdStr := c.Param("worksite-id")
+
+	worksiteId, err := strconv.Atoi(worksiteIdStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid worksite ID"})
+		return
+	}
 	var worksite models.Worksite
 
 	if err := db.First(&worksite, worksiteId).Error; err != nil {
@@ -36,7 +43,7 @@ func GetWorksiteDetails(c *gin.Context) {
 }
 
 func GetWorkersInWorksite(c *gin.Context) {
-	worksiteId := c.Param("worksiteId")
+	worksiteId := c.Param("worksite-id")
 	var workers []models.Worker
 
 	if err := db.Where("worksite_id = ?", worksiteId).Find(&workers).Error; err != nil {
@@ -48,7 +55,7 @@ func GetWorkersInWorksite(c *gin.Context) {
 }
 
 func GetWorksiteReadings(c *gin.Context) {
-	worksiteId := c.Param("worksiteId")
+	worksiteId := c.Param("worksite-id")
 	var readings []models.Reading
 
 	if err := db.Where("worksite_id = ?", worksiteId).Find(&readings).Error; err != nil {

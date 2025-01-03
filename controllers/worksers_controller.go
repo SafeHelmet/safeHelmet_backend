@@ -20,7 +20,7 @@ func GetAllWorkers(c *gin.Context) {
 }
 
 func GetWorkerDetails(c *gin.Context) {
-	workerId := c.Param("workerId")
+	workerId := c.Param("worker-id")
 	var worker models.Worker
 
 	if err := db.First(&worker, workerId).Error; err != nil {
