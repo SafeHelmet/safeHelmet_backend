@@ -46,9 +46,15 @@ func GetWorkersInWorksite(c *gin.Context) {
 	worksiteId := c.Param("worksite-id")
 	var workers []models.Worker
 
-	if err := db.Where("worksite_id = ?", worksiteId).Find(&workers).Error; err != nil {
+	var worksite_worker_assignments []models.WorksiteWorkerAssignment
+
+	if err := db.Preload("Worker").Where("worksite_id = ?", worksiteId).Find(&worksite_worker_assignments).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
+	}
+
+	for _, assignment := range worksite_worker_assignments {
+		workers = append(workers, assignment.Worker)
 	}
 
 	c.JSON(http.StatusOK, workers)
