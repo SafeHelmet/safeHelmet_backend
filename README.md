@@ -1,97 +1,130 @@
-# API Documentation
+# SafeHelmet Backend API Documentation
 
-## **Workers and Worksites**
+## Table of Contents
+- [Worksites](#worksites)
+  - [Get All Worksites](#get-all-worksites)
+  - [Get Worksite Details](#get-worksite-details)
+  - [Get Workers in Worksite](#get-workers-in-worksite)
+  - [Get Worksite Readings](#get-worksite-readings)
+  - [Create Worksite](#create-worksite)
+  - [Assign Worker to Worksite](#assign-worker-to-worksite)
+  - [Update Worksite](#update-worksite)
+- [Workers](#workers)
+  - [Get All Workers](#get-all-workers)
+  - [Get Worker Details](#get-worker-details)
+  - [Get All Bosses](#get-all-bosses)
+  - [Update Worker](#update-worker)
+- [Helmets](#helmets)
+  - [Get All Helmets](#get-all-helmets)
+- [Readings](#readings)
+  - [Get All Readings](#get-all-readings)
+  - [Get Reading Details](#get-reading-details)
 
-### List of Workers in a Worksite
-- **Endpoint:** `GET /worksites/:worksiteId/workers`
-- **Description:** Returns the list of workers currently assigned to the specified worksite.
-- **Parameters:**
-  - `worksiteId` (path): ID of the worksite.
+## Worksites
 
----
+### Get All Worksites
+- **URL**: `/api/v1/worksites`
+- **Method**: `GET`
+- **Description**: Retrieves a list of all worksites.
 
-### Worker Details
-- **Endpoint:** `GET /workers/:workerId`
-- **Description:** Returns details about a worker, including specializations and current assignments.
-- **Parameters:**
-  - `workerId` (path): ID of the worker.
+### Get Worksite Details
+- **URL**: `/api/v1/worksites/:worksite-id`
+- **Method**: `GET`
+- **Description**: Retrieves details of a specific worksite by ID.
 
----
+### Get Workers in Worksite
+- **URL**: `/api/v1/worksites/:worksite-id/workers`
+- **Method**: `GET`
+- **Description**: Retrieves a list of workers in a specific worksite.
 
-## **Readings**
+### Get Worksite Readings
+- **URL**: `/api/v1/worksites/:worksite-id/readings`
+- **Method**: `GET`
+- **Description**: Retrieves a list of readings for a specific worksite.
 
-### Specific Readings for Worker, Worksite, and Date
-- **Endpoint:** `GET /workers/:workerId/worksites/:worksiteId/readings`
-- **Description:** Retrieves helmet readings associated with a worker for a specific worksite and date.
-- **Parameters:**
-  - `workerId` (path): ID of the worker.
-  - `worksiteId` (path): ID of the worksite.
-  - `date` (query): Specific date in `YYYY-MM-DD` format.
-
----
-
-### Worksite Readings in a Time Window
-- **Endpoint:** `GET /worksites/:worksiteId/readings`
-- **Description:** Returns all readings for a worksite within a specified time window.
-- **Parameters:**
-  - `worksiteId` (path): ID of the worksite.
-  - `from` (query): Start of the time window (`YYYY-MM-DD HH:mm:ss`).
-  - `to` (query): End of the time window (`YYYY-MM-DD HH:mm:ss`).
-
----
-
-### Anomalous Readings for a Worksite
-- **Endpoint:** `GET /worksites/:worksiteId/readings/anomalous`
-- **Description:** Returns all anomalous readings associated with a worksite.
-- **Parameters:**
-  - `worksiteId` (path): ID of the worksite.
-
----
-
-### Anomalous Readings for a Worker
-- **Endpoint:** `GET /workers/:workerId/readings/anomalous`
-- **Description:** Returns all anomalous readings associated with a worker.
-- **Parameters:**
-  - `workerId` (path): ID of the worker.
-
----
-
-### Helmet Operating Hours in a Time Window
-- **Endpoint:** `GET /helmets/:helmetId/operating-hours`
-- **Description:** Calculates the operating hours of a helmet within a specified time window.
-- **Parameters:**
-  - `helmetId` (path): ID of the helmet.
-  - `from` (query): Start of the time window (`YYYY-MM-DD HH:mm:ss`).
-  - `to` (query): End of the time window (`YYYY-MM-DD HH:mm:ss`).
-
----
-
-### All Helmet Readings in a Time Window
-- **Endpoint:** `GET /helmets/:helmetId/readings`
-- **Description:** Returns all readings for a helmet within a specified time window.
-- **Parameters:**
-  - `helmetId` (path): ID of the helmet.
-  - `from` (query): Start of the time window (`YYYY-MM-DD HH:mm:ss`).
-  - `to` (query): End of the time window (`YYYY-MM-DD HH:mm:ss`).
-
----
-
-## **Management and Configuration**
-
-### List of Worksites
-- **Endpoint:** `GET /worksites`
-- **Description:** Returns a list of all active worksites.
-
----
-
-### Assign Worker to Worksite
-- **Endpoint:** `POST /worksites/:worksiteId/workers`
-- **Description:** Assigns a worker to a worksite with a specific helmet.
-- **Parameters:**
-  - `worksiteId` (path): ID of the worksite.
-- **Body:**
+### Create Worksite
+- **URL**: `/api/v1/worksites`
+- **Method**: `POST`
+- **Description**: Creates a new worksite.
+- **Body**:
   ```json
   {
-    "workerId": 123,
-    "helmetId": 456
+    "name": "Worksite Name",
+    "latitude": 45.0,
+    "longitude": 9.0,
+    "start_date_of_work": "2023-10-01T00:00:00Z",
+    "end_date_of_work": "2023-12-31T00:00:00Z"
   }
+
+### Assign Worker to Worksite
+- **URL**: `api/v1/worksites/assign-worker`
+- **Method**: `POST`
+- **Description**: Assigns a worker to a worksite.
+- **Body**:
+  ```json
+  {
+    "worksite_id": 1,
+    "worker_id": 1,
+    "assigned_by": 1
+  }
+
+### Update Worksite
+- **URL**: `/api/v1/worksites/:worksite-id`
+- **Method**: `PUT`
+- **Description**: Updates a specific worksite by ID.
+- **Body**:
+  ```json
+  {
+    "name": "Updated Worksite Name",
+    "latitude": 45.0,
+    "longitude": 9.0,
+    "start_date_of_work": "2023-10-01T00:00:00Z",
+    "end_date_of_work": "2023-12-31T00:00:00Z"
+  }
+
+## Workers
+
+### Get All Workers
+- **URL**: `/api/v1/workers`
+- **Method**: `GET`
+- **Description**: Retrieves a list of all workers.
+
+### Get Worker Details
+- **URL**: `/api/v1/workers/:worker-id`
+- **Method**: `GET`
+- **Description**: Retrieves details of a specific worker by ID.
+
+### Get All Bosses
+- **URL**: `/api/v1/workers/bosses`
+- **Method**: `GET`
+- **Description**: Retrieves a list of all bosses.
+
+### Update Worker
+- **URL**: `/api/v1/workers/:worker-id`
+- **Method**: `PUT`
+- **Description**: Updates a specific worker by ID.
+- **Body**:
+  ```json
+  {
+    "name": "Updated Worker Name",
+    "surname": "Updated Worker Surname"
+  }
+
+  ## Helmets
+
+### Get All Helmets
+- **URL**: `/api/v1/helmets`
+- **Method**: `GET`
+- **Description**: Retrieves a list of all helmets.
+
+## Readings
+
+### Get All Readings
+- **URL**: `/api/v1/readings`
+- **Method**: `GET`
+- **Description**: Retrieves a list of all readings.
+
+### Get Reading Details
+- **URL**: `/api/v1/readings/:reading-id`
+- **Method**: `GET`
+- **Description**: Retrieves details of a specific reading by ID.
