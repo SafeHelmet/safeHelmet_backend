@@ -107,3 +107,36 @@ func CreateWorksite(c *gin.Context) {
 
 	c.JSON(http.StatusOK, worksite)
 }
+
+func UpdateWorksite(c *gin.Context) {
+	worksiteIdStr := c.Param("worksite-id")
+
+	worksiteId, err := strconv.Atoi(worksiteIdStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid worksite ID"})
+		return
+	}
+
+	var worksite models.Worksite
+
+	if err := db.First(&worksite, worksiteId).Error; err != nil {
+		if err.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Worksite not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+		return
+	}
+
+	if err := c.ShouldBindJSON(&worksite); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := db.Save(&worksite).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, worksite)
+}

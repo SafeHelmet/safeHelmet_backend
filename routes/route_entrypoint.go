@@ -24,6 +24,11 @@ func DeclareRoutes(r *gin.Engine) {
 		{
 			RouteHelmets(helmets)
 		}
+
+		readings := v1.Group("/readings")
+		{
+			RouteReadings(readings)
+		}
 	}
 
 	// test
