@@ -110,7 +110,7 @@
     "surname": "Updated Worker Surname"
   }
 
-  ## Helmets
+## Helmets
 
 ### Get All Helmets
 - **URL**: `/api/v1/helmets`
