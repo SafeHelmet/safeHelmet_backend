@@ -10,9 +10,20 @@ import (
 
 func GetAllWorkers(c *gin.Context) {
 	var workers []models.Worker
+	var count int64
 
-	if err := db.Find(&workers).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// Leggi i parametri di ordinamento dalla query string
+	sortBy := c.DefaultQuery("sortBy", "id") // Campo di default: "id"
+	order := c.DefaultQuery("order", "asc")  // Ordine di default: "asc"
+
+	// Verifica che l'ordine sia valido (asc o desc)
+	if order != "asc" && order != "desc" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order parameter. Use 'asc' or 'desc'."})
+		return
+	}
+
+	if err := db.Find(&workers).Order(sortBy + " " + order).Count(&count).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"total": count, "error": err.Error()})
 		return
 	}
 

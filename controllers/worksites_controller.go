@@ -12,11 +12,23 @@ func GetAllWorksites(c *gin.Context) {
 	var worksites []models.Worksite
 	var count int64
 
-	if err := db.Find(&worksites).Count(&count).Error; err != nil {
+	// Leggi i parametri di ordinamento dalla query string
+	sortBy := c.DefaultQuery("sortBy", "id") // Campo di default: "id"
+	order := c.DefaultQuery("order", "asc")  // Ordine di default: "asc"
+
+	// Verifica che l'ordine sia valido (asc o desc)
+	if order != "asc" && order != "desc" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order parameter. Use 'asc' or 'desc'."})
+		return
+	}
+
+	// Ottieni i dati dal database ordinati
+	if err := db.Find(&worksites).Order(sortBy + " " + order).Count(&count).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	// Restituisci i dati ordinati
 	c.JSON(http.StatusOK, gin.H{"total": count, "worksites": worksites})
 }
 
