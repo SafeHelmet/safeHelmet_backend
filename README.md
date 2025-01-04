@@ -43,7 +43,15 @@ Example:
 ### Get Workers in Worksite
 - **URL**: `/api/v1/worksites/:worksite-id/workers`
 - **Method**: `GET`
-- **Description**: Retrieves a list of workers in a specific worksite.
+- **Description**: Retrieves a list of workers in a specific worksite. Supports sorting in ascending or descending order on fields.
+- **Query Parameters**:
+  - `sortBy` (optional): The field to sort by (e.g., `name`, `surname`).
+  - `order` (optional): The order of sorting (`asc` for ascending, `desc` for descending). Default is `asc`.
+
+Example:
+```
+/api/v1/worksites/:worksite-id/workers?sortBy=name&order=desc
+```
 
 ### Get Worksite Readings
 - **URL**: `/api/v1/worksites/:worksite-id/readings`

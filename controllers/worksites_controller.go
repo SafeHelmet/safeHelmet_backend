@@ -57,10 +57,20 @@ func GetWorksiteDetails(c *gin.Context) {
 func GetWorkersInWorksite(c *gin.Context) {
 	worksiteId := c.Param("worksite-id")
 	var workers []models.Worker
-
 	var worksite_worker_assignments []models.WorksiteWorkerAssignment
+	var count int64
 
-	if err := db.Preload("Worker").Where("worksite_id = ?", worksiteId).Find(&worksite_worker_assignments).Error; err != nil {
+	// Leggi i parametri di ordinamento dalla query string
+	sortBy := c.DefaultQuery("sortBy", "id") // Campo di default: "id"
+	order := c.DefaultQuery("order", "asc")  // Ordine di default: "asc"
+
+	// Verifica che l'ordine sia valido (asc o desc)
+	if order != "asc" && order != "desc" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order parameter. Use 'asc' or 'desc'."})
+		return
+	}
+
+	if err := db.Preload("Worker").Where("worksite_id = ?", worksiteId).Find(&worksite_worker_assignments).Order(sortBy + " " + order).Count(&count).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -69,7 +79,7 @@ func GetWorkersInWorksite(c *gin.Context) {
 		workers = append(workers, assignment.Worker)
 	}
 
-	c.JSON(http.StatusOK, workers)
+	c.JSON(http.StatusOK, gin.H{"total": count, "workers": workers})
 }
 
 func GetWorksiteReadings(c *gin.Context) {
