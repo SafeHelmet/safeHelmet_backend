@@ -25,7 +25,15 @@
 ### Get All Worksites
 - **URL**: `/api/v1/worksites`
 - **Method**: `GET`
-- **Description**: Retrieves a list of all worksites.
+- **Description**: Retrieves a list of all worksites. Supports sorting in ascending or descending order on fields.
+- **Query Parameters**:
+  - `sortBy` (optional): The field to sort by (e.g., `name`, `start_date_of_work`).
+  - `order` (optional): The order of sorting (`asc` for ascending, `desc` for descending). Default is `asc`.
+
+Example:
+```
+/api/v1/worksites?sortBy=name&order=desc
+```
 
 ### Get Worksite Details
 - **URL**: `/api/v1/worksites/:worksite-id`
@@ -87,7 +95,15 @@
 ### Get All Workers
 - **URL**: `/api/v1/workers`
 - **Method**: `GET`
-- **Description**: Retrieves a list of all workers.
+- **Description**: Retrieves a list of all workers. Supports sorting in ascending or descending order on fields.
+- **Query Parameters**:
+  - `sortBy` (optional): The field to sort by (e.g., `name`, `surname`).
+  - `order` (optional): The order of sorting (`asc` for ascending, `desc` for descending). Default is `asc`.
+
+Example:
+```
+/api/v1/workers?sortBy=name&order=desc
+```
 
 ### Get Worker Details
 - **URL**: `/api/v1/workers/:worker-id`
@@ -115,14 +131,31 @@
 ### Get All Helmets
 - **URL**: `/api/v1/helmets`
 - **Method**: `GET`
-- **Description**: Retrieves a list of all helmets.
+- **Description**: Retrieves a list of all helmets. Supports sorting in ascending or descending order on fields.
+- **Query Parameters**:
+  - `sortBy` (optional): The field to sort by (e.g., `model`, `manufacture_date`).
+  - `order` (optional): The order of sorting (`asc` for ascending, `desc` for descending). Default is `asc`.
+
+Example:
+```
+/api/v1/helmets?sortBy=model&order=desc
+```
+
 
 ## Readings
 
 ### Get All Readings
 - **URL**: `/api/v1/readings`
 - **Method**: `GET`
-- **Description**: Retrieves a list of all readings.
+- **Description**: Retrieves a list of all readings. Supports sorting in ascending or descending order on fields.
+- **Query Parameters**:
+  - `sortBy` (optional): The field to sort by (e.g., `timestamp`, `value`).
+  - `order` (optional): The order of sorting (`asc` for ascending, `desc` for descending). Default is `asc`.
+
+Example:
+```
+/api/v1/readings?sortBy=timestamp&order=desc
+```
 
 ### Get Reading Details
 - **URL**: `/api/v1/readings/:reading-id`
