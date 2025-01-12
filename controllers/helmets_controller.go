@@ -28,3 +28,15 @@ func GetAllHelmets(c *gin.Context) {
 
 	c.JSON(http.StatusOK, helmets)
 }
+
+func GetHelmetDetails(c *gin.Context) {
+	helmetId := c.Param("helmet-id")
+	var helmet models.Helmet
+
+	if err := db.First(&helmet, helmetId).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, helmet)
+}

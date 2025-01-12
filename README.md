@@ -149,6 +149,17 @@ Example:
 /api/v1/helmets?sortBy=model&order=desc
 ```
 
+### Get Helmet Details
+- **URL**: `/api/v1/helmets/:helmet-id`
+- **Method**: `GET`
+- **Description**: Retrieves details of a specific helmet by ID.
+- **Query Parameters**: None
+
+Example:
+```
+/api/v1/helmets/1
+```
+
 
 ## Readings
 
