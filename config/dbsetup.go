@@ -22,6 +22,7 @@ func GetDSN() string {
 func Migrate(db *gorm.DB) {
 	// Migrazione delle strutture
 	err := db.AutoMigrate(
+		&models.WeatherData{},
 		&models.Worksite{},
 		&models.Worker{},
 		&models.Specialization{},

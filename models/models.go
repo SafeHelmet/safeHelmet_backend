@@ -50,14 +50,21 @@ type HelmetCategory struct {
 }
 
 type Reading struct {
-	ID        int       `json:"id" gorm:"primaryKey"`
-	ReadAt    time.Time `json:"read_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
-	HelmetID  int       `json:"helmet_id" gorm:"not null"`
-	Sensor1   float32   `json:"sensor1"`
-	Sensor2   float32   `json:"sensor2"`
-	Sensor3   float32   `json:"sensor3"`
-	Anomalous bool      `json:"anomalous"`
-	Helmet    Helmet    `gorm:"foreignKey:HelmetID;references:ID"`
+	ID                    int       `json:"id" gorm:"primaryKey"`
+	ReadAt                time.Time `json:"read_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
+	HelmetID              int       `json:"helmet_id" gorm:"not null"`
+	Temperature           float64   `json:"temperature"`
+	Brightness            int       `json:"brightness"`
+	Methane               float64   `json:"methane"`
+	CarbonMonoxide        float64   `json:"carbon_monoxide"`
+	SmokeDetection        bool      `json:"smoke_detection"`
+	X                     float64   `json:"X"`
+	Y                     float64   `json:"Y"`
+	Z                     float64   `json:"Z"`
+	G                     float64   `json:"G"`
+	UsesWeldingProtection bool      `json:"uses_welding_protection"`
+	UsesGasProtection     bool      `json:"uses_gas_protection"`
+	Helmet                Helmet    `gorm:"foreignKey:HelmetID;references:ID"`
 }
 
 type WorkerAttendance struct {
@@ -92,4 +99,17 @@ type WorksiteWorkerAssignment struct {
 	Worksite   Worksite   `gorm:"foreignKey:WorksiteID;references:ID"`
 	Worker     Worker     `gorm:"foreignKey:WorkerID;references:ID"`
 	Boss       Boss       `gorm:"foreignKey:AssignedBy;references:ID"`
+}
+
+type WeatherData struct {
+	WorksiteID int       `json:"worksite_id" gorm:"primaryKey"`
+	CreatedAt  time.Time `json:"created_at" gorm:"primaryKey;default:CURRENT_TIMESTAMP"`
+	Temp       float64   `json:"temp"`
+	TempMin    float64   `json:"temp_min"`
+	TempMax    float64   `json:"temp_max"`
+	Humidity   int       `json:"humidity"`
+	Brightness int       `json:"brightness"`
+	C0         float64   `json:"c0"`
+	PM10       float64   `json:"pm10"`
+	Worksite   Worksite  `gorm:"foreignKey:WorksiteID;references:ID"`
 }

@@ -137,16 +137,16 @@ func SeedDatabase(db *gorm.DB) error {
 
 	// Crea record di esempio per la tabella Reading
 	readings := []models.Reading{
-		{HelmetID: helmetsFromDB[0].ID, Sensor1: 10.5, Sensor2: 20.3, Sensor3: 30.1, Anomalous: false},
-		{HelmetID: helmetsFromDB[1].ID, Sensor1: 11.5, Sensor2: 21.3, Sensor3: 31.1, Anomalous: true},
-		{HelmetID: helmetsFromDB[2].ID, Sensor1: 12.5, Sensor2: 22.3, Sensor3: 32.1, Anomalous: false},
-		{HelmetID: helmetsFromDB[3].ID, Sensor1: 13.5, Sensor2: 23.3, Sensor3: 33.1, Anomalous: true},
-		{HelmetID: helmetsFromDB[4].ID, Sensor1: 14.5, Sensor2: 24.3, Sensor3: 34.1, Anomalous: false},
-		{HelmetID: helmetsFromDB[5].ID, Sensor1: 15.5, Sensor2: 25.3, Sensor3: 35.1, Anomalous: true},
-		{HelmetID: helmetsFromDB[6].ID, Sensor1: 16.5, Sensor2: 26.3, Sensor3: 36.1, Anomalous: false},
-		{HelmetID: helmetsFromDB[7].ID, Sensor1: 17.5, Sensor2: 27.3, Sensor3: 37.1, Anomalous: true},
-		{HelmetID: helmetsFromDB[8].ID, Sensor1: 18.5, Sensor2: 28.3, Sensor3: 38.1, Anomalous: false},
-		{HelmetID: helmetsFromDB[9].ID, Sensor1: 19.5, Sensor2: 29.3, Sensor3: 39.1, Anomalous: true},
+		{HelmetID: helmetsFromDB[0].ID, Temperature: 10.5, Brightness: 20, Methane: 30.1, CarbonMonoxide: 0.1, SmokeDetection: false, X: 1.0, Y: 2.0, Z: 3.0, G: 4.0, UsesWeldingProtection: false, UsesGasProtection: true},
+		{HelmetID: helmetsFromDB[1].ID, Temperature: 11.5, Brightness: 21, Methane: 31.1, CarbonMonoxide: 0.2, SmokeDetection: true, X: 1.1, Y: 2.1, Z: 3.1, G: 4.1, UsesWeldingProtection: true, UsesGasProtection: false},
+		{HelmetID: helmetsFromDB[2].ID, Temperature: 12.5, Brightness: 22, Methane: 32.1, CarbonMonoxide: 0.3, SmokeDetection: false, X: 1.2, Y: 2.2, Z: 3.2, G: 4.2, UsesWeldingProtection: false, UsesGasProtection: true},
+		{HelmetID: helmetsFromDB[3].ID, Temperature: 13.5, Brightness: 23, Methane: 33.1, CarbonMonoxide: 0.4, SmokeDetection: true, X: 1.3, Y: 2.3, Z: 3.3, G: 4.3, UsesWeldingProtection: true, UsesGasProtection: false},
+		{HelmetID: helmetsFromDB[4].ID, Temperature: 14.5, Brightness: 24, Methane: 34.1, CarbonMonoxide: 0.5, SmokeDetection: false, X: 1.4, Y: 2.4, Z: 3.4, G: 4.4, UsesWeldingProtection: false, UsesGasProtection: true},
+		{HelmetID: helmetsFromDB[5].ID, Temperature: 15.5, Brightness: 25, Methane: 35.1, CarbonMonoxide: 0.6, SmokeDetection: true, X: 1.5, Y: 2.5, Z: 3.5, G: 4.5, UsesWeldingProtection: true, UsesGasProtection: false},
+		{HelmetID: helmetsFromDB[6].ID, Temperature: 16.5, Brightness: 26, Methane: 36.1, CarbonMonoxide: 0.7, SmokeDetection: false, X: 1.6, Y: 2.6, Z: 3.6, G: 4.6, UsesWeldingProtection: false, UsesGasProtection: true},
+		{HelmetID: helmetsFromDB[7].ID, Temperature: 17.5, Brightness: 27, Methane: 37.1, CarbonMonoxide: 0.8, SmokeDetection: true, X: 1.7, Y: 2.7, Z: 3.7, G: 4.7, UsesWeldingProtection: true, UsesGasProtection: false},
+		{HelmetID: helmetsFromDB[8].ID, Temperature: 18.5, Brightness: 28, Methane: 38.1, CarbonMonoxide: 0.9, SmokeDetection: false, X: 1.8, Y: 2.8, Z: 3.8, G: 4.8, UsesWeldingProtection: false, UsesGasProtection: true},
+		{HelmetID: helmetsFromDB[9].ID, Temperature: 19.5, Brightness: 29, Methane: 39.1, CarbonMonoxide: 1.0, SmokeDetection: true, X: 1.9, Y: 2.9, Z: 3.9, G: 4.9, UsesWeldingProtection: true, UsesGasProtection: false},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&readings).Error; err != nil {
 		return err
