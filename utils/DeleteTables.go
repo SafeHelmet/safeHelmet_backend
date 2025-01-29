@@ -14,4 +14,5 @@ func DeleteTables(db *gorm.DB) {
 	db.Exec("DELETE FROM workers")
 	db.Exec("DELETE FROM worksites")
 	db.Exec("DELETE FROM bosses")
+	db.Exec("DELETE FROM weather_data")
 }
