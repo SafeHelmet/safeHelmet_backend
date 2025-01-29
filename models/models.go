@@ -93,3 +93,16 @@ type WorksiteWorkerAssignment struct {
 	Worker     Worker     `gorm:"foreignKey:WorkerID;references:ID"`
 	Boss       Boss       `gorm:"foreignKey:AssignedBy;references:ID"`
 }
+
+type WeatherData struct {
+	WorksiteID int       `json:"worksite_id" gorm:"primaryKey"`
+	CreatedAt  time.Time `json:"created_at" gorm:"primaryKey;default:CURRENT_TIMESTAMP"`
+	Temp       float64   `json:"temp"`
+	TempMin    float64   `json:"temp_min"`
+	TempMax    float64   `json:"temp_max"`
+	Humidity   int       `json:"humidity"`
+	Brightness int       `json:"brightness"`
+	C0         float64   `json:"c0"`
+	PM10       float64   `json:"pm10"`
+	Worksite   Worksite  `gorm:"foreignKey:WorksiteID;references:ID"`
+}
