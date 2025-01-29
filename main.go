@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"safecap_backend/api"
 	"safecap_backend/config"
 	"safecap_backend/controllers"
 	"safecap_backend/routes"
@@ -37,6 +38,9 @@ func main() {
 		}
 		log.Println("Database seeded successfully")
 	}
+
+	// Avvia il scheduler per la chiamata API in una goroutine
+	go api.StartAPICallScheduler()
 
 	// Crea un router Gin
 	r := config.SetupRouter()
