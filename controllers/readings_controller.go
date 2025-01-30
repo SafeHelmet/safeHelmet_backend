@@ -40,3 +40,8 @@ func GetReadingDetails(c *gin.Context) {
 
 	c.JSON(http.StatusOK, reading)
 }
+
+// / TODO: Implementare la funzione per creare la reading dai dati del mobile
+func CreateReading(c *gin.Context) {
+
+}

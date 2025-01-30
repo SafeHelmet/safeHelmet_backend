@@ -82,3 +82,19 @@ func UpdateWorker(c *gin.Context) {
 
 	c.JSON(http.StatusOK, worker)
 }
+
+func CreateWorker(c *gin.Context) {
+	var worker models.Worker
+
+	if err := c.ShouldBindJSON(&worker); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := db.Create(&worker).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, worker)
+}
