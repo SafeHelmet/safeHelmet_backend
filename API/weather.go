@@ -41,7 +41,9 @@ type WeatherResponse struct {
 }
 
 func weatherAPI(lat, lon string) {
-	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&unit=%s&appid=%s", lat, lon, "metric", os.Getenv("WEATHER_API_KEY"))
+	log.Println("WeatherAPI: ")
+
+	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=%s&appid=%s", lat, lon, "metric", os.Getenv("WEATHER_API_KEY"))
 
 	// Esegui la richiesta HTTP GET
 	resp, err := http.Get(url)
@@ -76,6 +78,7 @@ func weatherAPI(lat, lon string) {
 }
 
 func airPollutionAPI(lat, lon string) {
+	log.Println("PollutionAPI: ")
 
 	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/air_pollution?lat=%s&lon=%s&appid=%s", lat, lon, os.Getenv("WEATHER_API_KEY"))
 
@@ -105,27 +108,33 @@ func airPollutionAPI(lat, lon string) {
 	if len(airPollutionData.List) > 0 {
 		co := airPollutionData.List[0].Components.Co
 		pm10 := airPollutionData.List[0].Components.Pm10
-		log.Printf("Valori filtrati - CO: %f, PM10: %f\n", co, pm10)
+		log.Printf("Valori filtrati - CO: %f, PM10: %f\n", co, pm10) // Le misure sono in μg/m^3
 		// Inserisci i valori nel database o fai qualcos'altro con i dati qui
 	} else {
 		log.Println("Nessun dato disponibile nella risposta API")
 	}
 }
 
+// TODO: Fare coroutine che questo è tutto sburato
 func StartAPICallScheduler() {
-	// Crea un ticker che scatta ogni ora
-	ticker := time.NewTicker(1 * time.Hour)
-	defer ticker.Stop()
-
 	// Esegui la chiamata API all'avvio
 	weatherAPI("45", "9")
 	airPollutionAPI("45", "9")
 
-	// Loop infinito per eseguire la chiamata API ogni ora
-	for range ticker.C {
-		// trova tutti i siti
-		// per ogni sito, chiama l'API
-		// callAPI(lat, lon)
+	for {
+		// Calcola il tempo fino alla prossima ora esatta
+		now := time.Now()
+		nextHour := now.Truncate(time.Hour).Add(time.Hour) // Arrotonda all'ora successiva
+		durationUntilNextHour := time.Until(nextHour)
+
+		fmt.Println("Attesa fino alla prossima ora:", durationUntilNextHour)
+
+		// Aspetta fino alla prossima ora esatta
+		time.Sleep(durationUntilNextHour)
+
+		// Esegui la chiamata API
+		weatherAPI("45", "9")
+		airPollutionAPI("45", "9")
 	}
 }
 

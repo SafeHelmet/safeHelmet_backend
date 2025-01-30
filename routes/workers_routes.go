@@ -14,4 +14,6 @@ func RouteWorkers(r *gin.RouterGroup) {
 	r.POST("", controllers.CreateWorker)
 
 	r.PUT("/:worker-id", controllers.UpdateWorker)
+
+	r.DELETE("/:worker-id", controllers.DeleteWorker)
 }

@@ -13,9 +13,14 @@ type Worksite struct {
 }
 
 type Worker struct {
-	ID      int    `json:"id" gorm:"primaryKey"`
-	Name    string `json:"name" gorm:"not null"`
-	Surname string `json:"surname" gorm:"not null"`
+	ID        int       `json:"id" gorm:"primaryKey"`
+	Name      string    `json:"name" gorm:"not null"`
+	Surname   string    `json:"surname" gorm:"not null"`
+	Email     string    `json:"email" gorm:"not null"`
+	Phone     string    `json:"phone" gorm:"not null"`
+	Active    bool      `json:"active" gorm:"default:true"`
+	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
 }
 
 type Boss struct {

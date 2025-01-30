@@ -98,3 +98,24 @@ func CreateWorker(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, worker)
 }
+
+func DeleteWorker(c *gin.Context) {
+	workerId := c.Param("worker-id")
+	var worker models.Worker
+
+	if err := db.First(&worker, workerId).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Worker not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+		return
+	}
+
+	if err := db.Delete(&worker).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Worker deleted"})
+}
