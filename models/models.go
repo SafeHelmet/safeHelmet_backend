@@ -69,6 +69,7 @@ type Reading struct {
 	G                     float64   `json:"G"`
 	UsesWeldingProtection bool      `json:"uses_welding_protection"`
 	UsesGasProtection     bool      `json:"uses_gas_protection"`
+	Anomaly               bool      `json:"anomaly"`
 	Helmet                Helmet    `gorm:"foreignKey:HelmetID;references:ID"`
 }
 
