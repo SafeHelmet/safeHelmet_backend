@@ -59,17 +59,24 @@ type Reading struct {
 	ReadAt                time.Time `json:"read_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
 	HelmetID              int       `json:"helmet_id" gorm:"not null"`
 	Temperature           float64   `json:"temperature"`
-	Brightness            int       `json:"brightness"`
-	Methane               float64   `json:"methane"`
-	CarbonMonoxide        float64   `json:"carbon_monoxide"`
+	Humidity              float64   `json:"humidity"`
+	Brightness            float64   `json:"brightness"`
+	Methane               bool      `json:"methane"`
+	CarbonMonoxide        bool      `json:"carbon_monoxide"`
 	SmokeDetection        bool      `json:"smoke_detection"`
-	X                     float64   `json:"X"`
-	Y                     float64   `json:"Y"`
-	Z                     float64   `json:"Z"`
-	G                     float64   `json:"G"`
 	UsesWeldingProtection bool      `json:"uses_welding_protection"`
 	UsesGasProtection     bool      `json:"uses_gas_protection"`
-	Anomaly               bool      `json:"anomaly"`
+	Avg_X                 float64   `json:"avg_X"`
+	Avg_Y                 float64   `json:"avg_Y"`
+	Avg_Z                 float64   `json:"avg_Z"`
+	Avg_G                 float64   `json:"avg_G"`
+	Std_X                 float64   `json:"std_X"`
+	Std_Y                 float64   `json:"std_Y"`
+	Std_Z                 float64   `json:"std_Z"`
+	Std_G                 float64   `json:"std_G"`
+	Max_G                 float64   `json:"max_G"`
+	IncorrectPosture      float64   `json:"incorrect_posture"`
+	Anomaly               bool      `json:"anomaly" gorm:"not null"`
 	Helmet                Helmet    `gorm:"foreignKey:HelmetID;references:ID"`
 }
 
