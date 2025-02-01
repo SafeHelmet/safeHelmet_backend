@@ -7,5 +7,5 @@ import (
 )
 
 func RoutePolling(r *gin.RouterGroup) {
-	r.GET("", controllers.CheckRecentAnomaly)
+	r.GET("/:helmet-id", controllers.CheckRecentAnomaly)
 }
