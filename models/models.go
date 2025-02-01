@@ -47,6 +47,7 @@ type Helmet struct {
 	CategoryID int            `json:"category_id" gorm:"not null"`
 	CreatedAt  time.Time      `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 	Category   HelmetCategory `gorm:"foreignKey:CategoryID;references:ID"`
+	UUID       string         `json:"uuid" gorm:"not null"`
 }
 
 type HelmetCategory struct {
