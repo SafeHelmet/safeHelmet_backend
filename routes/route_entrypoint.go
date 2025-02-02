@@ -34,6 +34,10 @@ func DeclareRoutes(r *gin.Engine) {
 		{
 			RoutePolling(polling)
 		}
+		login := v1.Group("/login")
+		{
+			RouteLogin(login)
+		}
 	}
 
 	// test

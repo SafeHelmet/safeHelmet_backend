@@ -17,6 +17,7 @@ type Worker struct {
 	Name      string    `json:"name" gorm:"not null"`
 	Surname   string    `json:"surname" gorm:"not null"`
 	Email     string    `json:"email" gorm:"not null"`
+	Password  string    `json:"password" gorm:"not null;default:'password'"`
 	Phone     string    `json:"phone" gorm:"not null"`
 	Active    bool      `json:"active" gorm:"default:true"`
 	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
