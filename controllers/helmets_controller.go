@@ -40,3 +40,16 @@ func GetHelmetDetails(c *gin.Context) {
 
 	c.JSON(http.StatusOK, helmet)
 }
+
+// Ritorna l'ID del casco per l'api del polling e verifica quando mi connetto ad un casco che esso effettivamente esista nel DB
+func GetHelmetId(c *gin.Context) {
+	helmetUuid := c.Param("helmet-uuid")
+	var helmet models.Helmet
+
+	if err := db.Where("uuid = ?", helmetUuid).First(&helmet).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"helmet_id": helmet.ID})
+}

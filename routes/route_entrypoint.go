@@ -29,6 +29,15 @@ func DeclareRoutes(r *gin.Engine) {
 		{
 			RouteReadings(readings)
 		}
+
+		polling := v1.Group("/polling")
+		{
+			RoutePolling(polling)
+		}
+		login := v1.Group("/login")
+		{
+			RouteLogin(login)
+		}
 	}
 
 	// test

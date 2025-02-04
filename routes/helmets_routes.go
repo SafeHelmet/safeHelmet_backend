@@ -9,4 +9,5 @@ import (
 func RouteHelmets(r *gin.RouterGroup) {
 	r.GET("", controllers.GetAllHelmets)
 	r.GET("/:helmet-id", controllers.GetHelmetDetails)
+	r.GET("UUID/:helmet-uuid", controllers.GetHelmetId)
 }

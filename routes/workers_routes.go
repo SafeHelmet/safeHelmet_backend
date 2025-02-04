@@ -11,5 +11,9 @@ func RouteWorkers(r *gin.RouterGroup) {
 	r.GET("/:worker-id", controllers.GetWorkerDetails)
 	r.GET("/bosses", controllers.GetAllBosses)
 
+	r.POST("", controllers.CreateWorker)
+
 	r.PUT("/:worker-id", controllers.UpdateWorker)
+
+	r.DELETE("/:worker-id", controllers.DeleteWorker)
 }

@@ -17,4 +17,6 @@ func RouteWorksites(r *gin.RouterGroup) {
 	r.POST("/assing-worker", controllers.AssignWorkerToWorksite)
 
 	r.PUT("/:worksite-id", controllers.UpdateWorksite)
+
+	r.DELETE("/:worksite-id", controllers.DeleteWorksite)
 }
