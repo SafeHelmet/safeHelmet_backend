@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"safecap_backend/models"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -74,6 +75,8 @@ func UpdateWorker(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	worker.UpdatedAt = time.Now()
 
 	if err := db.Save(&worker).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

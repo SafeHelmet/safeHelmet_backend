@@ -103,7 +103,75 @@ func UpdateReading(c *gin.Context) {
 
 // / TODO: Implementare la funzione per creare la reading dai dati del mobile
 func CreateReading(c *gin.Context) {
+	var reading models.Reading
 
+	// Read the data from the context
+	var requestData map[string]interface{}
+
+	/// TODO: non è detto che vada bene magari posso fare il bind diretto di reading?
+	// Bind del JSON ricevuto nel body della richiesta alla mappa
+	if err := c.ShouldBindJSON(&requestData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
+		return
+	}
+
+	// Get worksite ID from helmetID
+	var worksite models.Worksite
+	if err := db.Joins("JOIN worker_attendances ON worker_attendances.worksite_id = worksites.id").
+		Where("worker_attendances.helmet_id = ?", requestData.helmet).
+		First(&worksite).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Worksite not found"})
+		return
+	}
+
+	// Find last weather data for the worksite
+	var weather models.WeatherData
+	if err := db.Where("worksite_id = ?", worksite.ID).
+		Order("created_at DESC").
+		First(&weather).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Weather data not found"})
+		return
+	}
+
+	// Check if there are any anomalies
+	reading.anomaly = false
+
+	// Temperature anomaly check
+	if requestData.temp-weather.TempMax > 10 || weather.TempMin-requestData.temp > 10 {
+		reading.anomaly = true
+	}
+
+	// Humidity anomaly check
+	if requestData.humidity > weather.Humidity+15 {
+		reading.anomaly = true
+	}
+
+	// Brightness anomaly check
+	if requestData.brightness > weather.Brightness+100 && !requestData.UsesWeldingProtection {
+		reading.anomaly = true
+	}
+
+	// Gas anomaly check
+	if (requestData.Methane || requestData.CarbonMonoxide || requestData.SmokeDetection) && !requestData.UsesGasProtection {
+		reading.anomaly = true
+	}
+
+	// Posture anomaly check
+	if requestData.IncorrectPosture > 0.5 {
+		reading.anomaly = true
+	}
+
+	// Crash anomaly check
+	if requestData.Max_G > 10 {
+		reading.anomaly = true
+	}
+
+	if err := db.Create(&reading).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, reading)
 }
 
 func DeleteReading(c *gin.Context) {

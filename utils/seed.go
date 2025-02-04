@@ -13,33 +13,34 @@ func SeedDatabase(db *gorm.DB) error {
 
 	// Crea record di esempio per la tabella Worksite
 	worksites := []models.Worksite{
-		{Name: "Worksite 1"},
-		{Name: "Worksite 2"},
-		{Name: "Worksite 3"},
-		{Name: "Worksite 4"},
-		{Name: "Worksite 5"},
-		{Name: "Worksite 6"},
-		{Name: "Worksite 7"},
-		{Name: "Worksite 8"},
-		{Name: "Worksite 9"},
-		{Name: "Worksite 10"},
+		{Name: "Worksite 1", Latitude: 45.4642, Longitude: 9.1900, City: "Milan", ZipCode: "20100", State: "Italy", Address: "Via Roma, 1", StartAt: time.Now()},
+		{Name: "Worksite 2", Latitude: 41.9028, Longitude: 12.4964, City: "Rome", ZipCode: "00100", State: "Italy", Address: "Piazza Venezia, 2", StartAt: time.Now()},
+		{Name: "Worksite 3", Latitude: 48.8566, Longitude: 2.3522, City: "Paris", ZipCode: "75000", State: "France", Address: "Avenue des Champs-Élysées, 3", StartAt: time.Now()},
+		{Name: "Worksite 4", Latitude: 51.5074, Longitude: -0.1278, City: "London", ZipCode: "EC1A 1BB", State: "United Kingdom", Address: "Baker Street, 4", StartAt: time.Now()},
+		{Name: "Worksite 5", Latitude: 40.7128, Longitude: -74.0060, City: "New York", ZipCode: "10001", State: "USA", Address: "Broadway, 5", StartAt: time.Now()},
+		{Name: "Worksite 6", Latitude: 35.6895, Longitude: 139.6917, City: "Tokyo", ZipCode: "100-0001", State: "Japan", Address: "Shibuya, 6", StartAt: time.Now()},
+		{Name: "Worksite 7", Latitude: -33.8688, Longitude: 151.2093, City: "Sydney", ZipCode: "2000", State: "Australia", Address: "George Street, 7", StartAt: time.Now()},
+		{Name: "Worksite 8", Latitude: 37.7749, Longitude: -122.4194, City: "San Francisco", ZipCode: "94103", State: "USA", Address: "Market Street, 8", StartAt: time.Now()},
+		{Name: "Worksite 9", Latitude: 55.7558, Longitude: 37.6173, City: "Moscow", ZipCode: "101000", State: "Russia", Address: "Red Square, 9", StartAt: time.Now()},
+		{Name: "Worksite 10", Latitude: 39.9042, Longitude: 116.4074, City: "Beijing", ZipCode: "100000", State: "China", Address: "Tiananmen Square, 10", StartAt: time.Now()},
 	}
+
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&worksites).Error; err != nil {
 		return err
 	}
 
 	// Crea record di esempio per la tabella Worker
 	workers := []models.Worker{
-		{Name: "John", Surname: "Doe"},
-		{Name: "Jane", Surname: "Smith"},
-		{Name: "Alice", Surname: "Johnson"},
-		{Name: "Bob", Surname: "Brown"},
-		{Name: "Charlie", Surname: "Davis"},
-		{Name: "David", Surname: "Wilson"},
-		{Name: "Eve", Surname: "Taylor"},
-		{Name: "Frank", Surname: "Anderson"},
-		{Name: "Grace", Surname: "Thomas"},
-		{Name: "Hank", Surname: "Jackson"},
+		{Name: "John", Surname: "Doe", Email: "john.doe@example.com", Password: "password", Phone: "1234567890", Active: true, FiscalCode: "JHNDOE123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "Jane", Surname: "Smith", Email: "jane.smith@example.com", Password: "password", Phone: "1234567891", Active: true, FiscalCode: "JNSMTH123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "Alice", Surname: "Johnson", Email: "alice.johnson@example.com", Password: "password", Phone: "1234567892", Active: true, FiscalCode: "ALCJHN123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "Bob", Surname: "Brown", Email: "bob.brown@example.com", Password: "password", Phone: "1234567893", Active: true, FiscalCode: "BOBBRW123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "Charlie", Surname: "Davis", Email: "charlie.davis@example.com", Password: "password", Phone: "1234567894", Active: true, FiscalCode: "CHRDVS123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "David", Surname: "Wilson", Email: "david.wilson@example.com", Password: "password", Phone: "1234567895", Active: true, FiscalCode: "DAVWLS123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "Eve", Surname: "Taylor", Email: "eve.taylor@example.com", Password: "password", Phone: "1234567896", Active: true, FiscalCode: "EVETYL123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "Frank", Surname: "Anderson", Email: "frank.anderson@example.com", Password: "password", Phone: "1234567897", Active: true, FiscalCode: "FRNAND123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "Grace", Surname: "Thomas", Email: "grace.thomas@example.com", Password: "password", Phone: "1234567898", Active: true, FiscalCode: "GRCTHM123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "Hank", Surname: "Jackson", Email: "hank.jackson@example.com", Password: "password", Phone: "1234567899", Active: true, FiscalCode: "HNKJCK123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&workers).Error; err != nil {
 		return err
@@ -47,16 +48,16 @@ func SeedDatabase(db *gorm.DB) error {
 
 	// Crea record di esempio per la tabella Boss
 	bosses := []models.Boss{
-		{Name: "BOSSJohn", Surname: "Doe"},
-		{Name: "BOSSJane", Surname: "Smith"},
-		{Name: "BOSSAlice", Surname: "Johnson"},
-		{Name: "BOSSBob", Surname: "Brown"},
-		{Name: "BOSSCharlie", Surname: "Davis"},
-		{Name: "BOSSDavid", Surname: "Wilson"},
-		{Name: "BOSSEve", Surname: "Taylor"},
-		{Name: "BOSSFrank", Surname: "Anderson"},
-		{Name: "BOSSGrace", Surname: "Thomas"},
-		{Name: "BOSSHank", Surname: "Jackson"},
+		{Name: "BOSSJohn", Surname: "Doe", Email: "bossjohn.doe@example.com", Password: "password", Phone: "1234567800", Active: true, FiscalCode: "BOSJHN123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "BOSSJane", Surname: "Smith", Email: "bossjane.smith@example.com", Password: "password", Phone: "1234567801", Active: true, FiscalCode: "BOSJNS123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "BOSSAlice", Surname: "Johnson", Email: "bossalice.johnson@example.com", Password: "password", Phone: "1234567802", Active: true, FiscalCode: "BOSALJ123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "BOSSBob", Surname: "Brown", Email: "bossbob.brown@example.com", Password: "password", Phone: "1234567803", Active: true, FiscalCode: "BOSBOB123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "BOSSCharlie", Surname: "Davis", Email: "bosscharlie.davis@example.com", Password: "password", Phone: "1234567804", Active: true, FiscalCode: "BOSCHD123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "BOSSDavid", Surname: "Wilson", Email: "bossdavid.wilson@example.com", Password: "password", Phone: "1234567805", Active: true, FiscalCode: "BOSDAV123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "BOSSEve", Surname: "Taylor", Email: "bosseve.taylor@example.com", Password: "password", Phone: "1234567806", Active: true, FiscalCode: "BOSEVT123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "BOSSFrank", Surname: "Anderson", Email: "bossfrank.anderson@example.com", Password: "password", Phone: "1234567807", Active: true, FiscalCode: "BOSFRA123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "BOSSGrace", Surname: "Thomas", Email: "bossgrace.thomas@example.com", Password: "password", Phone: "1234567808", Active: true, FiscalCode: "BOSGRT123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		{Name: "BOSSHank", Surname: "Jackson", Email: "bosshank.jackson@example.com", Password: "password", Phone: "1234567809", Active: true, FiscalCode: "BOSHNK123456", CreatedAt: time.Now(), UpdatedAt: time.Now()},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&bosses).Error; err != nil {
 		return err
@@ -117,16 +118,16 @@ func SeedDatabase(db *gorm.DB) error {
 
 	// Crea record di esempio per la tabella Helmet
 	helmets := []models.Helmet{
-		{CategoryID: helmetCategoriesFromDB[0].ID},
-		{CategoryID: helmetCategoriesFromDB[1].ID},
-		{CategoryID: helmetCategoriesFromDB[0].ID},
-		{CategoryID: helmetCategoriesFromDB[1].ID},
-		{CategoryID: helmetCategoriesFromDB[0].ID},
-		{CategoryID: helmetCategoriesFromDB[1].ID},
-		{CategoryID: helmetCategoriesFromDB[0].ID},
-		{CategoryID: helmetCategoriesFromDB[1].ID},
-		{CategoryID: helmetCategoriesFromDB[0].ID},
-		{CategoryID: helmetCategoriesFromDB[1].ID},
+		{CategoryID: helmetCategoriesFromDB[0].ID, UUID: "uuid-0001", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[1].ID, UUID: "uuid-0002", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[0].ID, UUID: "uuid-0003", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[1].ID, UUID: "uuid-0004", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[0].ID, UUID: "uuid-0005", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[1].ID, UUID: "uuid-0006", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[0].ID, UUID: "uuid-0007", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[1].ID, UUID: "uuid-0008", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[0].ID, UUID: "uuid-0009", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[1].ID, UUID: "uuid-0010", CreatedAt: time.Now()},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&helmets).Error; err != nil {
 		return err
