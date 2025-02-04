@@ -3,17 +3,22 @@ package models
 import "time"
 
 type Worksite struct {
-	ID        int       `json:"id" gorm:"primaryKey"`
-	Name      string    `json:"name" gorm:"not null"`
-	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	Latitude  float64   `json:"latitude" gorm:"not null"`
-	Longitude float64   `json:"longitude" gorm:"not null"`
-	Address   string    `json:"address"`
-	City      string    `json:"city" gorm:"not null"`
-	ZipCode   string    `json:"zip_code" gorm:"not null"`
-	State     string    `json:"state" gorm:"not null"`
-	StartAt   time.Time `json:"start_date_of_work" gorm:"not null"`
-	EndAt     time.Time `json:"end_date_of_work"`
+	ID                   int       `json:"id" gorm:"primaryKey"`
+	Name                 string    `json:"name" gorm:"not null"`
+	CreatedAt            time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	Latitude             float64   `json:"latitude" gorm:"not null"`
+	Longitude            float64   `json:"longitude" gorm:"not null"`
+	Address              string    `json:"address"`
+	City                 string    `json:"city" gorm:"not null"`
+	ZipCode              string    `json:"zip_code" gorm:"not null"`
+	State                string    `json:"state" gorm:"not null"`
+	StartAt              time.Time `json:"start_date_of_work" gorm:"not null"`
+	EndAt                time.Time `json:"end_date_of_work"`
+	TemperatureThreshold float64   `json:"temperature_threshold" gorm:"default:10"`
+	HumidityThreshold    float64   `json:"humidity_threshold" gorm:"default:10"`
+	BrightnessThreshold  float64   `json:"brightness_threshold" gorm:"default:10"`
+	PostureThreshold     float64   `json:"posture_threshold" gorm:"default:0.5"`
+	MaxGThreshold        float64   `json:"max_g_threshold" gorm:"default:4"`
 }
 
 type Worker struct {
@@ -134,8 +139,8 @@ type WeatherData struct {
 	Temp       float64   `json:"temp" gorm:"not null"`
 	TempMin    float64   `json:"temp_min" gorm:"not null"`
 	TempMax    float64   `json:"temp_max" gorm:"not null"`
-	Humidity   int       `json:"humidity" gorm:"not null"`
-	Brightness int       `json:"brightness" gorm:"not null"`
+	Humidity   float64   `json:"humidity" gorm:"not null"`
+	Brightness float64   `json:"brightness" gorm:"not null"`
 	C0         float64   `json:"c0"`
 	PM10       float64   `json:"pm10"`
 	Worksite   Worksite  `gorm:"foreignKey:WorksiteID;references:ID"`
