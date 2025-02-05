@@ -47,17 +47,6 @@ func GetWorkerDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, worker)
 }
 
-func GetAllBosses(c *gin.Context) {
-	var bosses []models.Boss
-
-	if err := db.Find(&bosses).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, bosses)
-}
-
 func UpdateWorker(c *gin.Context) {
 	workerId := c.Param("worker-id")
 	var worker models.Worker

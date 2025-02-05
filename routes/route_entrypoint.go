@@ -20,6 +20,11 @@ func DeclareRoutes(r *gin.Engine) {
 			RouteWorkers(workers)
 		}
 
+		bosses := v1.Group("/bosses")
+		{
+			RouteBosses(bosses)
+		}
+
 		helmets := v1.Group("/helmets")
 		{
 			RouteHelmets(helmets)
@@ -34,9 +39,15 @@ func DeclareRoutes(r *gin.Engine) {
 		{
 			RoutePolling(polling)
 		}
+
 		login := v1.Group("/login")
 		{
 			RouteLogin(login)
+		}
+
+		weather := v1.Group("/weather")
+		{
+			RouteLogin(weather)
 		}
 	}
 
