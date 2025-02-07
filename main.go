@@ -40,7 +40,7 @@ func main() {
 	}
 
 	// Avvia il scheduler per la chiamata API in una goroutine
-	go API.StartAPICallScheduler()
+	go API.StartAPICallScheduler(db)
 
 	// Crea un router Gin
 	r := config.SetupRouter()

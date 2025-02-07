@@ -7,7 +7,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"safecap_backend/models"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type AirPollutionResponse struct {
@@ -40,7 +43,7 @@ type WeatherResponse struct {
 	} `json:"main"`
 }
 
-func weatherAPI(lat, lon string) {
+func weatherAPI(db *gorm.DB, lat, lon string) {
 	log.Println("WeatherAPI: ")
 
 	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=%s&appid=%s", lat, lon, "metric", os.Getenv("WEATHER_API_KEY"))
@@ -74,6 +77,20 @@ func weatherAPI(lat, lon string) {
 	humidity := weatherData.Main.Humidity
 	log.Printf("Valori filtrati - Temp: %f, Temp Min: %f, Temp Max: %f, Humidity: %d\n", temp, tempMin, tempMax, humidity)
 	// Inserisci i valori nel database o fai qualcos'altro con i dati qui
+
+	var weather models.WeatherData
+
+	weather.Temp = temp
+	weather.TempMin = tempMin
+	weather.TempMax = tempMax
+	weather.Humidity = float64(humidity)
+
+	weather.Brightness = 0 /// TODO: aggiungere la luminosità
+
+	if err := db.Create(&weather).Error; err != nil {
+		log.Printf("Error in weather POST: %v", err)
+		return
+	}
 
 }
 
@@ -116,11 +133,7 @@ func airPollutionAPI(lat, lon string) {
 }
 
 // TODO: Fare coroutine che questo è tutto sburato
-func StartAPICallScheduler() {
-	// Esegui la chiamata API all'avvio
-	weatherAPI("45", "9")
-	airPollutionAPI("45", "9")
-
+func StartAPICallScheduler(db *gorm.DB) {
 	for {
 		// Calcola il tempo fino alla prossima ora esatta
 		now := time.Now()
@@ -133,8 +146,15 @@ func StartAPICallScheduler() {
 		time.Sleep(durationUntilNextHour)
 
 		// Esegui la chiamata API
-		weatherAPI("45", "9")
-		airPollutionAPI("45", "9")
+		var worksites []models.Worksite
+
+		if err := db.Find(&worksites); err != nil {
+			log.Printf("Error fetching worksites: %v", err)
+		}
+
+		for _, worksite := range worksites {
+			weatherAPI(db, fmt.Sprintf("%f", worksite.Latitude), fmt.Sprintf("%f", worksite.Longitude))
+		}
 	}
 }
 
