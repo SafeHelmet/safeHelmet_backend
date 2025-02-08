@@ -84,14 +84,35 @@ func GetWorkersInWorksite(c *gin.Context) {
 
 func GetWorksiteReadings(c *gin.Context) {
 	worksiteId := c.Param("worksite-id")
+	var workerAttendances []models.WorkerAttendance
 	var readings []models.Reading
 
-	if err := db.Where("worksite_id = ?", worksiteId).Find(&readings).Error; err != nil {
+	// Prendere tutte i worker_attendance con worksite_id = worksiteId
+	if err := db.Where("worksite_id = ?", worksiteId).Find(&workerAttendances).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, readings)
+	// Per ogni worker_attendance, prendiamo tutti i caschetti
+	for _, attendance := range workerAttendances {
+		var helmets []models.Helmet
+		if err := db.Where("worker_id = ?", attendance.WorkerID).Find(&helmets).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Per ogni caschetto prendiamo tutte le letture
+		for _, helmet := range helmets {
+			var helmetReadings []models.Reading
+			if err := db.Where("helmet_id = ?", helmet.ID).Find(&helmetReadings).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
+			readings = append(readings, helmetReadings...)
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{"readings": readings})
 }
 
 func AssignWorkerToWorksite(c *gin.Context) {
