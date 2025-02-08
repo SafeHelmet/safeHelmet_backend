@@ -52,10 +52,11 @@ func GetWorksiteOfWorker(c *gin.Context) {
 	var worksites []models.Worksite
 
 	if err := db.Table("worksites").
-		Select("worksites.id, workistes.name").
+		Select("worksites.id, worksites.name"). // Corretto il typo
 		Joins("JOIN worksite_worker_assignments ON worksite_worker_assignments.worksite_id = worksites.id").
 		Where("worksite_worker_assignments.worker_id = ?", workerId).
-		Scan(&worksites).Error; err != nil {
+		Find(&worksites). // Usato Find al posto di Scan
+		Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
