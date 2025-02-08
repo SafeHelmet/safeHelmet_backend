@@ -12,8 +12,10 @@ func RouteWorkers(r *gin.RouterGroup) {
 	r.GET("/:worker-id/worksite", controllers.GetWorksiteOfWorker)
 
 	r.POST("", controllers.CreateWorker)
+	r.POST("/attendance", controllers.CreateWorkerAttendance)
 
 	r.PUT("/:worker-id", controllers.UpdateWorker)
+	r.PUT("/attendance", controllers.UpdateWorkerAttendance)
 
 	r.DELETE("/:worker-id", controllers.DeleteWorker)
 }

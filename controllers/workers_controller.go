@@ -108,6 +108,53 @@ func CreateWorker(c *gin.Context) {
 	c.JSON(http.StatusCreated, worker)
 }
 
+func CreateWorkerAttendance(c *gin.Context) {
+	var attendance models.WorkerAttendance
+
+	// Binding del JSON ricevuto
+	if err := c.ShouldBindJSON(&attendance); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Salvo nel DB
+	if err := db.Create(&attendance).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, attendance)
+}
+
+func UpdateWorkerAttendance(c *gin.Context) {
+	var attendance models.WorkerAttendance
+
+	// Binding del JSON ricevuto
+	if err := c.ShouldBindJSON(&attendance); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Trovo l'ultima entry per worker_id, worksite_id, helmet_id
+	if err := db.Where("worker_id = ? AND worksite_id = ? AND helmet_id = ?", attendance.WorkerID, attendance.WorksiteID, attendance.HelmetID).
+		Order("start_at DESC"). // Ordino per start_at in ordine decrescente
+		First(&attendance).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	now := time.Now()
+	attendance.EndAt = &now
+
+	// Salvo nel DB
+	if err := db.Save(&attendance).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, attendance)
+}
+
 func DeleteWorker(c *gin.Context) {
 	workerId := c.Param("worker-id")
 	var worker models.Worker
