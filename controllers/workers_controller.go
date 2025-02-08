@@ -47,6 +47,22 @@ func GetWorkerDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, worker)
 }
 
+func GetWorksiteOfWorker(c *gin.Context) {
+	workerId := c.Param("worker-id")
+	var worksites []models.Worksite
+
+	if err := db.Table("worksites").
+		Select("worksites.id, workistes.name").
+		Joins("JOIN worksite_worker_assignments ON worksite_worker_assignments.worksite_id = worksites.id").
+		Where("worksite_worker_assignments.worker_id = ?", workerId).
+		Scan(&worksites).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"worksites": worksites})
+}
+
 func UpdateWorker(c *gin.Context) {
 	workerId := c.Param("worker-id")
 	var worker models.Worker

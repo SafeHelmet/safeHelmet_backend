@@ -9,6 +9,8 @@ import (
 func RouteWorkers(r *gin.RouterGroup) {
 	r.GET("", controllers.GetAllWorkers)
 	r.GET("/:worker-id", controllers.GetWorkerDetails)
+	r.GET("/:worker-id/worksite", controllers.GetWorksiteOfWorker)
+
 	r.POST("", controllers.CreateWorker)
 
 	r.PUT("/:worker-id", controllers.UpdateWorker)
