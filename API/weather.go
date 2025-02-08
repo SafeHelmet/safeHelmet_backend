@@ -26,7 +26,7 @@ type WeatherResponse struct {
 	} `json:"main"`
 }
 
-func weatherAPI(db *gorm.DB, lat, lon string) {
+func weatherAPI(db *gorm.DB, lat, lon string, worksiteID int) {
 	log.Println("WeatherAPI: ")
 
 	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=%s&appid=%s", lat, lon, "metric", os.Getenv("WEATHER_API_KEY"))
@@ -67,6 +67,7 @@ func weatherAPI(db *gorm.DB, lat, lon string) {
 	weather.TempMin = tempMin
 	weather.TempMax = tempMax
 	weather.Humidity = float64(humidity)
+	weather.WorksiteID = worksiteID
 
 	weather.Brightness = 5000 /// TODO: aggiungere la luminosità
 
@@ -98,7 +99,7 @@ func StartAPICallScheduler(db *gorm.DB) {
 		}
 
 		for _, worksite := range worksites {
-			weatherAPI(db, fmt.Sprintf("%f", worksite.Latitude), fmt.Sprintf("%f", worksite.Longitude))
+			weatherAPI(db, fmt.Sprintf("%f", worksite.Latitude), fmt.Sprintf("%f", worksite.Longitude), worksite.ID)
 		}
 	}
 }
