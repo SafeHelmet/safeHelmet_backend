@@ -104,14 +104,6 @@ func UpdateReading(c *gin.Context) {
 // / TODO: Implementare la funzione per creare la reading dai dati del mobile
 func CreateReading(c *gin.Context) {
 
-	const (
-		TempAnomalyThreshold       = 10
-		HumidityAnomalyThreshold   = 15
-		BrightnessAnomalyThreshold = 100
-		IncorrectPostureThreshold  = 0.5
-		MaxGThreshold              = 10
-	)
-
 	var reading models.Reading
 
 	// Bind del JSON ricevuto nel body della richiesta alla mappa
@@ -142,17 +134,17 @@ func CreateReading(c *gin.Context) {
 	reading.Anomaly = false
 
 	// Temperature Anomaly check
-	if reading.Temperature-weather.TempMax > TempAnomalyThreshold || weather.TempMin-reading.Temperature > TempAnomalyThreshold {
+	if reading.Temperature-weather.TempMax > worksite.TemperatureThreshold || weather.TempMin-reading.Temperature > worksite.TemperatureThreshold {
 		reading.Anomaly = true
 	}
 
 	// Humidity Anomaly check
-	if reading.Humidity > weather.Humidity+HumidityAnomalyThreshold {
+	if reading.Humidity > weather.Humidity+worksite.HumidityThreshold {
 		reading.Anomaly = true
 	}
 
 	// Brightness Anomaly check
-	if reading.Brightness > weather.Brightness+BrightnessAnomalyThreshold && !reading.UsesWeldingProtection {
+	if reading.Brightness > weather.Brightness+worksite.BrightnessThreshold && !reading.UsesWeldingProtection {
 		reading.Anomaly = true
 	}
 
@@ -162,12 +154,12 @@ func CreateReading(c *gin.Context) {
 	}
 
 	// Posture Anomaly check
-	if reading.IncorrectPosture > IncorrectPostureThreshold {
+	if reading.IncorrectPosture > worksite.PostureThreshold {
 		reading.Anomaly = true
 	}
 
 	// Crash Anomaly check
-	if reading.Max_G > MaxGThreshold {
+	if reading.Max_G > worksite.MaxGThreshold {
 		reading.Anomaly = true
 	}
 
