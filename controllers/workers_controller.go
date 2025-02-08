@@ -64,6 +64,18 @@ func GetWorksiteOfWorker(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"worksites": worksites})
 }
 
+func GetWorkerAttendance(c *gin.Context) {
+	workerId := c.Param("worker-id")
+	var attendance []models.WorkerAttendance
+
+	if err := db.Where("worker_id = ?", workerId).Find(&attendance).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, attendance)
+}
+
 func UpdateWorker(c *gin.Context) {
 	workerId := c.Param("worker-id")
 	var worker models.Worker

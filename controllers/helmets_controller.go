@@ -55,6 +55,18 @@ func GetHelmetId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"helmet_id": helmet.ID})
 }
 
+func GetHelmetAttendance(c *gin.Context) {
+	helmetId := c.Param("helmet-id")
+	var attendance []models.WorkerAttendance
+
+	if err := db.Where("helmet_id = ?", helmetId).Find(&attendance).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, attendance)
+}
+
 func UpdateHelmet(c *gin.Context) {
 	helmetId := c.Param("helmet-id")
 	var helmet models.Helmet

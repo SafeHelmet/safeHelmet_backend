@@ -11,6 +11,8 @@ func RouteHelmets(r *gin.RouterGroup) {
 	r.GET("/:helmet-id", controllers.GetHelmetDetails)
 	r.GET("UUID/:helmet-uuid", controllers.GetHelmetId)
 
+	r.GET("/:helmet-id/attendace", controllers.GetHelmetAttendance)
+
 	r.PUT("/:helmet-id", controllers.UpdateHelmet)
 
 	r.POST("", controllers.CreateHelmet)

@@ -113,6 +113,18 @@ func AssignWorkerToWorksite(c *gin.Context) {
 	c.JSON(http.StatusOK, assignment)
 }
 
+func GetWorksiteAttendance(c *gin.Context) {
+	worksiteId := c.Param("worksite-id")
+	var attendance []models.WorkerAttendance
+
+	if err := db.Where("worksite_id = ?", worksiteId).Find(&attendance).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, attendance)
+}
+
 func CreateWorksite(c *gin.Context) {
 	var worksite models.Worksite
 

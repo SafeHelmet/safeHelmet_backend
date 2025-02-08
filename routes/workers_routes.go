@@ -11,6 +11,8 @@ func RouteWorkers(r *gin.RouterGroup) {
 	r.GET("/:worker-id", controllers.GetWorkerDetails)
 	r.GET("/:worker-id/worksite", controllers.GetWorksiteOfWorker)
 
+	r.GET("/:worker-id/attendance", controllers.GetWorkerAttendance)
+
 	r.POST("", controllers.CreateWorker)
 	r.POST("/attendance", controllers.CreateWorkerAttendance)
 

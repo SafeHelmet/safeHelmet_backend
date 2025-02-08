@@ -13,6 +13,8 @@ func RouteWorksites(r *gin.RouterGroup) {
 	r.GET("/:worksite-id/workers", controllers.GetWorkersInWorksite)
 	r.GET("/:worksite-id/readings", controllers.GetWorksiteReadings)
 
+	r.GET("/:worksite-id/attendance", controllers.GetWorksiteAttendance)
+
 	r.POST("", controllers.CreateWorksite)
 	r.POST("/assing-worker", controllers.AssignWorkerToWorksite)
 
