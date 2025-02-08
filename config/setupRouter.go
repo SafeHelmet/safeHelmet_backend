@@ -9,10 +9,10 @@ import (
 )
 
 func SetupRouter() *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:4200"}, // Domini consentiti
+		AllowOrigins:     []string{"http://localhost:4200", "https://safehelmet.github.io"}, // Domini consentiti
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
