@@ -13,23 +13,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type AirPollutionResponse struct {
-	Coord struct {
-		Lon float64 `json:"lon"`
-		Lat float64 `json:"lat"`
-	} `json:"coord"`
-	List []struct {
-		Main struct {
-			Aqi int `json:"aqi"`
-		} `json:"main"`
-		Components struct {
-			Co   float64 `json:"co"`
-			Pm10 float64 `json:"pm10"`
-		} `json:"components"`
-		Dt int64 `json:"dt"`
-	} `json:"list"`
-}
-
 type WeatherResponse struct {
 	Coord struct {
 		Lon float64 `json:"lon"`
@@ -85,51 +68,13 @@ func weatherAPI(db *gorm.DB, lat, lon string) {
 	weather.TempMax = tempMax
 	weather.Humidity = float64(humidity)
 
-	weather.Brightness = 0 /// TODO: aggiungere la luminosità
+	weather.Brightness = 5000 /// TODO: aggiungere la luminosità
 
 	if err := db.Create(&weather).Error; err != nil {
 		log.Printf("Error in weather POST: %v", err)
 		return
 	}
 
-}
-
-func airPollutionAPI(lat, lon string) {
-	log.Println("PollutionAPI: ")
-
-	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/air_pollution?lat=%s&lon=%s&appid=%s", lat, lon, os.Getenv("WEATHER_API_KEY"))
-
-	// Esegui la richiesta HTTP GET
-	resp, err := http.Get(url)
-	if err != nil {
-		log.Printf("Errore durante la chiamata API: %v\n", err)
-		return
-	}
-	defer resp.Body.Close()
-
-	// Leggi la risposta
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Printf("Errore durante la lettura della risposta: %v\n", err)
-		return
-	}
-
-	// Parsing del body
-	var airPollutionData AirPollutionResponse
-	if err := json.Unmarshal(body, &airPollutionData); err != nil {
-		log.Printf("Errore durante il parsing del JSON: %v\n", err)
-		return
-	}
-
-	// Filtra i valori di co e pm10
-	if len(airPollutionData.List) > 0 {
-		co := airPollutionData.List[0].Components.Co
-		pm10 := airPollutionData.List[0].Components.Pm10
-		log.Printf("Valori filtrati - CO: %f, PM10: %f\n", co, pm10) // Le misure sono in μg/m^3
-		// Inserisci i valori nel database o fai qualcos'altro con i dati qui
-	} else {
-		log.Println("Nessun dato disponibile nella risposta API")
-	}
 }
 
 // TODO: Fare coroutine che questo è tutto sburato
@@ -157,5 +102,3 @@ func StartAPICallScheduler(db *gorm.DB) {
 		}
 	}
 }
-
-// TODO dare a parki assieme alle letture anche le soglie

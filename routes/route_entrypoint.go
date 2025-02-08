@@ -47,7 +47,7 @@ func DeclareRoutes(r *gin.Engine) {
 
 		weather := v1.Group("/weather")
 		{
-			RouteLogin(weather)
+			RouteWeather(weather)
 		}
 	}
 
