@@ -23,7 +23,7 @@ func GetAllWorksiteWeather(c *gin.Context) {
 
 	var weathers []models.WorkerAttendance
 
-	if err := db.Where("worksite = ?", worksiteId).Find(&weathers).Error; err != nil {
+	if err := db.Where("worksite_id = ?", worksiteId).Find(&weathers).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -36,7 +36,7 @@ func GetLastWorksiteWeather(c *gin.Context) {
 
 	var weather models.WorkerAttendance
 
-	if err := db.Where("worksite = ?", worksiteId).Last(&weather).Error; err != nil {
+	if err := db.Where("worksite_id = ?", worksiteId).Last(&weather).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
