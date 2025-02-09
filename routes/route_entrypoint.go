@@ -49,6 +49,11 @@ func DeclareRoutes(r *gin.Engine) {
 		{
 			RouteWeather(weather)
 		}
+
+		attendance := v1.Group("/attendance")
+		{
+			RouteAttendances(attendance)
+		}
 	}
 
 	// test

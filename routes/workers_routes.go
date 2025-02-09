@@ -12,9 +12,10 @@ func RouteWorkers(r *gin.RouterGroup) {
 	r.GET("/:worker-id/worksite", controllers.GetWorksiteOfWorker)
 
 	r.GET("/:worker-id/attendance", controllers.GetWorkerAttendance)
+	r.GET("/:worker-id/attendance/last", controllers.GetLastWorkerAttendance)
 
-	r.POST("", controllers.CreateWorker)
 	r.POST("/attendance", controllers.CreateWorkerAttendance)
+	r.POST("", controllers.CreateWorker)
 
 	r.PUT("/:worker-id", controllers.UpdateWorker)
 	r.PUT("/attendance", controllers.UpdateWorkerAttendance)
