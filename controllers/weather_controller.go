@@ -36,7 +36,7 @@ func GetLastWorksiteWeather(c *gin.Context) {
 
 	var weather models.WeatherData
 
-	if err := db.Where("worksite_id = ?", worksiteId).Last(&weather).Error; err != nil {
+	if err := db.Where("worksite_id = ?", worksiteId).Order("created_at desc").First(&weather).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
