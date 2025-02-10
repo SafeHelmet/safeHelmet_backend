@@ -27,8 +27,6 @@ type WeatherResponse struct {
 }
 
 func weatherAPI(db *gorm.DB, lat, lon string, worksiteID int) {
-	log.Println("WeatherAPI: ")
-
 	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=%s&appid=%s", lat, lon, "metric", os.Getenv("WEATHER_API_KEY"))
 
 	// Esegui la richiesta HTTP GET
@@ -78,28 +76,41 @@ func weatherAPI(db *gorm.DB, lat, lon string, worksiteID int) {
 
 }
 
-// TODO: Fare coroutine che questo è tutto sburato
 func StartAPICallScheduler(db *gorm.DB) {
 	for {
-		// Calcola il tempo fino alla prossima ora esatta
+		log.Println("WeatherAPI: ")
 		now := time.Now()
-		nextHour := now.Truncate(time.Hour).Add(time.Hour) // Arrotonda all'ora successiva
-		durationUntilNextHour := time.Until(nextHour)
+		hour := now.Hour()
 
-		fmt.Println("Attesa fino alla prossima ora:", durationUntilNextHour)
+		// If it's before 8 or after 20, wait until 8
+		if hour < 8 || hour >= 20 {
+			nextRun := time.Date(now.Year(), now.Month(), now.Day(), 8, 0, 0, 0, now.Location())
+			if hour >= 20 { // Se è dopo le 20, aspetta fino a domani alle 8
+				nextRun = nextRun.Add(24 * time.Hour)
+			}
 
-		// Aspetta fino alla prossima ora esatta
-		time.Sleep(durationUntilNextHour)
+			waitTime := time.Until(nextRun)
+			log.Println("Waiting for new work day:", nextRun)
+			time.Sleep(waitTime)
+			continue
+		}
 
-		// Esegui la chiamata API
 		var worksites []models.Worksite
-
-		if err := db.Find(&worksites); err != nil {
-			log.Printf("Error fetching worksites: %v", err)
+		result := db.Find(&worksites)
+		if result.Error != nil {
+			log.Printf("Error in worksite query: %v", result.Error)
+		} else {
+			log.Println("Calling weather API at:", now)
+			for _, worksite := range worksites {
+				weatherAPI(db, fmt.Sprintf("%f", worksite.Latitude), fmt.Sprintf("%f", worksite.Longitude), worksite.ID)
+			}
 		}
 
-		for _, worksite := range worksites {
-			weatherAPI(db, fmt.Sprintf("%f", worksite.Latitude), fmt.Sprintf("%f", worksite.Longitude), worksite.ID)
-		}
+		// Wait for the next hour
+		nextHour := now.Truncate(time.Hour).Add(time.Hour)
+		sleepDuration := time.Until(nextHour)
+
+		fmt.Println("Waiting for next hour:", nextHour)
+		time.Sleep(sleepDuration)
 	}
 }
