@@ -47,7 +47,7 @@ func GetHelmetId(c *gin.Context) {
 	helmetMacAddress := c.Param("mac-address")
 	var helmet models.Helmet
 
-	if err := db.Where("macaddress = ?", helmetMacAddress).First(&helmet).Error; err != nil {
+	if err := db.Where("mac_address = ?", helmetMacAddress).First(&helmet).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
