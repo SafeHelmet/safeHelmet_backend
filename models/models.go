@@ -69,7 +69,7 @@ type Helmet struct {
 	CategoryID int            `json:"category_id" gorm:"not null"`
 	CreatedAt  time.Time      `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 	Category   HelmetCategory `gorm:"foreignKey:CategoryID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	UUID       string         `json:"uuid" gorm:"not null"`
+	MACAddress string         `json:"mac_address" gorm:"not null"`
 }
 
 type HelmetCategory struct {

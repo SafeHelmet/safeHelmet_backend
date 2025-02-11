@@ -118,16 +118,16 @@ func SeedDatabase(db *gorm.DB) error {
 
 	// Crea record di esempio per la tabella Helmet
 	helmets := []models.Helmet{
-		{CategoryID: helmetCategoriesFromDB[0].ID, UUID: "uuid-0001", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[1].ID, UUID: "uuid-0002", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[0].ID, UUID: "uuid-0003", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[1].ID, UUID: "uuid-0004", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[0].ID, UUID: "uuid-0005", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[1].ID, UUID: "uuid-0006", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[0].ID, UUID: "uuid-0007", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[1].ID, UUID: "uuid-0008", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[0].ID, UUID: "uuid-0009", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[1].ID, UUID: "uuid-0010", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac0", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "mac1", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac2", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "mac3", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac4", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "mac5", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac6", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "mac7", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac8", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "mac9", CreatedAt: time.Now()},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&helmets).Error; err != nil {
 		return err
