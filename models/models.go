@@ -152,43 +152,43 @@ type WeatherData struct {
 
 // Worksites delete hooks
 func (w *Worksite) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Where("worksite_id = ?", w.ID).Delete(&WorksiteBossAssignment{})
-	tx.Where("worksite_id = ?", w.ID).Delete(&WorksiteWorkerAssignment{})
-	tx.Where("worksite_id = ?", w.ID).Delete(&WorkerAttendance{})
-	tx.Where("worksite_id = ?", w.ID).Delete(&WeatherData{})
+	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WorksiteBossAssignment{})
+	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WorksiteWorkerAssignment{})
+	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WorkerAttendance{})
+	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WeatherData{})
 	return
 }
 
 // Worker delete hooks
 func (w *Worker) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Where("worker_id = ?", w.ID).Delete(&WorkerSpecialization{})
-	tx.Where("worker_id = ?", w.ID).Delete(&WorkerAttendance{})
-	tx.Where("worker_id = ?", w.ID).Delete(&WorksiteWorkerAssignment{})
+	tx.Unscoped().Where("worker_id = ?", w.ID).Delete(&WorkerSpecialization{})
+	tx.Unscoped().Where("worker_id = ?", w.ID).Delete(&WorkerAttendance{})
+	tx.Unscoped().Where("worker_id = ?", w.ID).Delete(&WorksiteWorkerAssignment{})
 	return
 }
 
 // Boss delete hooks
 func (b *Boss) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Where("boss_id = ?", b.ID).Delete(&WorksiteBossAssignment{})
-	tx.Where("assigned_by = ?", b.ID).Delete(&WorksiteWorkerAssignment{})
+	tx.Unscoped().Where("boss_id = ?", b.ID).Delete(&WorksiteBossAssignment{})
+	tx.Unscoped().Where("assigned_by = ?", b.ID).Delete(&WorksiteWorkerAssignment{})
 	return
 }
 
 // Helmet delete hooks
 func (h *Helmet) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Where("helmet_id = ?", h.ID).Delete(&Reading{})
-	tx.Where("helmet_id = ?", h.ID).Delete(&WorkerAttendance{})
+	tx.Unscoped().Where("helmet_id = ?", h.ID).Delete(&Reading{})
+	tx.Unscoped().Where("helmet_id = ?", h.ID).Delete(&WorkerAttendance{})
 	return
 }
 
 // Specialization delete hooks
 func (s *Specialization) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Where("specialization_id = ?", s.ID).Delete(&WorkerSpecialization{})
+	tx.Unscoped().Where("specialization_id = ?", s.ID).Delete(&WorkerSpecialization{})
 	return
 }
 
 // HelmetCategory delete hooks
 func (hc *HelmetCategory) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Where("category_id = ?", hc.ID).Delete(&Helmet{})
+	tx.Unscoped().Where("category_id = ?", hc.ID).Delete(&Helmet{})
 	return
 }
