@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Worksite struct {
 	ID                   int       `json:"id" gorm:"primaryKey"`
@@ -144,4 +148,47 @@ type WeatherData struct {
 	C0         float64   `json:"c0"`
 	PM10       float64   `json:"pm10"`
 	Worksite   Worksite  `gorm:"foreignKey:WorksiteID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+// Worksites delete hooks
+func (w *Worksite) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Where("worksite_id = ?", w.ID).Delete(&WorksiteBossAssignment{})
+	tx.Where("worksite_id = ?", w.ID).Delete(&WorksiteWorkerAssignment{})
+	tx.Where("worksite_id = ?", w.ID).Delete(&WorkerAttendance{})
+	tx.Where("worksite_id = ?", w.ID).Delete(&WeatherData{})
+	return
+}
+
+// Worker delete hooks
+func (w *Worker) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Where("worker_id = ?", w.ID).Delete(&WorkerSpecialization{})
+	tx.Where("worker_id = ?", w.ID).Delete(&WorkerAttendance{})
+	tx.Where("worker_id = ?", w.ID).Delete(&WorksiteWorkerAssignment{})
+	return
+}
+
+// Boss delete hooks
+func (b *Boss) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Where("boss_id = ?", b.ID).Delete(&WorksiteBossAssignment{})
+	tx.Where("assigned_by = ?", b.ID).Delete(&WorksiteWorkerAssignment{})
+	return
+}
+
+// Helmet delete hooks
+func (h *Helmet) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Where("helmet_id = ?", h.ID).Delete(&Reading{})
+	tx.Where("helmet_id = ?", h.ID).Delete(&WorkerAttendance{})
+	return
+}
+
+// Specialization delete hooks
+func (s *Specialization) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Where("specialization_id = ?", s.ID).Delete(&WorkerSpecialization{})
+	return
+}
+
+// HelmetCategory delete hooks
+func (hc *HelmetCategory) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Where("category_id = ?", hc.ID).Delete(&Helmet{})
+	return
 }
