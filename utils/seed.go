@@ -137,19 +137,6 @@ func SeedDatabase(db *gorm.DB) error {
 	var helmetsFromDB []models.Helmet
 	db.Find(&helmetsFromDB)
 
-	// Crea record di esempio per la tabella Reading
-	readings := []models.Reading{
-		{HelmetID: helmetsFromDB[0].ID, ReadAt: time.Now(), Temperature: 10.5, Humidity: 45.0, Brightness: 20, Methane: false, CarbonMonoxide: true, SmokeDetection: false, UsesWeldingProtection: false, UsesGasProtection: true, Avg_X: 1.0, Avg_Y: 2.0, Avg_Z: 3.0, Avg_G: 4.0, Std_X: 0.1, Std_Y: 0.2, Std_Z: 0.3, Std_G: 0.4, Max_G: 4.5, IncorrectPosture: 0.0, Anomaly: false},
-		{HelmetID: helmetsFromDB[1].ID, ReadAt: time.Now(), Temperature: 11.5, Humidity: 50.0, Brightness: 21, Methane: true, CarbonMonoxide: false, SmokeDetection: true, UsesWeldingProtection: true, UsesGasProtection: false, Avg_X: 1.1, Avg_Y: 2.1, Avg_Z: 3.1, Avg_G: 4.1, Std_X: 0.2, Std_Y: 0.3, Std_Z: 0.4, Std_G: 0.5, Max_G: 4.6, IncorrectPosture: 0.1, Anomaly: true},
-		{HelmetID: helmetsFromDB[2].ID, ReadAt: time.Now(), Temperature: 12.5, Humidity: 55.0, Brightness: 22, Methane: false, CarbonMonoxide: true, SmokeDetection: false, UsesWeldingProtection: false, UsesGasProtection: true, Avg_X: 1.2, Avg_Y: 2.2, Avg_Z: 3.2, Avg_G: 4.2, Std_X: 0.3, Std_Y: 0.4, Std_Z: 0.5, Std_G: 0.6, Max_G: 4.7, IncorrectPosture: 0.2, Anomaly: false},
-		{HelmetID: helmetsFromDB[3].ID, ReadAt: time.Now(), Temperature: 13.5, Humidity: 60.0, Brightness: 23, Methane: true, CarbonMonoxide: false, SmokeDetection: true, UsesWeldingProtection: true, UsesGasProtection: false, Avg_X: 1.3, Avg_Y: 2.3, Avg_Z: 3.3, Avg_G: 4.3, Std_X: 0.4, Std_Y: 0.5, Std_Z: 0.6, Std_G: 0.7, Max_G: 4.8, IncorrectPosture: 0.3, Anomaly: true},
-		{HelmetID: helmetsFromDB[4].ID, ReadAt: time.Now(), Temperature: 14.5, Humidity: 65.0, Brightness: 24, Methane: false, CarbonMonoxide: true, SmokeDetection: false, UsesWeldingProtection: false, UsesGasProtection: true, Avg_X: 1.4, Avg_Y: 2.4, Avg_Z: 3.4, Avg_G: 4.4, Std_X: 0.5, Std_Y: 0.6, Std_Z: 0.7, Std_G: 0.8, Max_G: 4.9, IncorrectPosture: 0.4, Anomaly: false},
-	}
-
-	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&readings).Error; err != nil {
-		return err
-	}
-
 	// Crea record di esempio per la tabella WorkerAttendance
 	workerAttendances := []models.WorkerAttendance{
 		{WorkerID: workersFromDB[0].ID, WorksiteID: worksites[0].ID, HelmetID: helmetsFromDB[0].ID},
@@ -164,6 +151,23 @@ func SeedDatabase(db *gorm.DB) error {
 		{WorkerID: workersFromDB[9].ID, WorksiteID: worksites[9].ID, HelmetID: helmetsFromDB[9].ID},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&workerAttendances).Error; err != nil {
+		return err
+	}
+
+	// Recupera gli ID generati automaticamente per le attendance
+	var workerAttendancesFromDB []models.WorkerAttendance
+	db.Find(&workerAttendancesFromDB)
+
+	// Crea record di esempio per la tabella Reading
+	readings := []models.Reading{
+		{AttendanceID: workerAttendancesFromDB[0].ID, ReadAt: time.Now(), Temperature: 10.5, Humidity: 45.0, Brightness: 20, Methane: false, CarbonMonoxide: true, SmokeDetection: false, UsesWeldingProtection: false, UsesGasProtection: true, Avg_X: 1.0, Avg_Y: 2.0, Avg_Z: 3.0, Avg_G: 4.0, Std_X: 0.1, Std_Y: 0.2, Std_Z: 0.3, Std_G: 0.4, Max_G: 4.5, IncorrectPosture: 0.0, Anomaly: false},
+		{AttendanceID: workerAttendancesFromDB[1].ID, ReadAt: time.Now(), Temperature: 11.5, Humidity: 50.0, Brightness: 21, Methane: true, CarbonMonoxide: false, SmokeDetection: true, UsesWeldingProtection: true, UsesGasProtection: false, Avg_X: 1.1, Avg_Y: 2.1, Avg_Z: 3.1, Avg_G: 4.1, Std_X: 0.2, Std_Y: 0.3, Std_Z: 0.4, Std_G: 0.5, Max_G: 4.6, IncorrectPosture: 0.1, Anomaly: true},
+		{AttendanceID: workerAttendancesFromDB[2].ID, ReadAt: time.Now(), Temperature: 12.5, Humidity: 55.0, Brightness: 22, Methane: false, CarbonMonoxide: true, SmokeDetection: false, UsesWeldingProtection: false, UsesGasProtection: true, Avg_X: 1.2, Avg_Y: 2.2, Avg_Z: 3.2, Avg_G: 4.2, Std_X: 0.3, Std_Y: 0.4, Std_Z: 0.5, Std_G: 0.6, Max_G: 4.7, IncorrectPosture: 0.2, Anomaly: false},
+		{AttendanceID: workerAttendancesFromDB[3].ID, ReadAt: time.Now(), Temperature: 13.5, Humidity: 60.0, Brightness: 23, Methane: true, CarbonMonoxide: false, SmokeDetection: true, UsesWeldingProtection: true, UsesGasProtection: false, Avg_X: 1.3, Avg_Y: 2.3, Avg_Z: 3.3, Avg_G: 4.3, Std_X: 0.4, Std_Y: 0.5, Std_Z: 0.6, Std_G: 0.7, Max_G: 4.8, IncorrectPosture: 0.3, Anomaly: true},
+		{AttendanceID: workerAttendancesFromDB[4].ID, ReadAt: time.Now(), Temperature: 14.5, Humidity: 65.0, Brightness: 24, Methane: false, CarbonMonoxide: true, SmokeDetection: false, UsesWeldingProtection: false, UsesGasProtection: true, Avg_X: 1.4, Avg_Y: 2.4, Avg_Z: 3.4, Avg_G: 4.4, Std_X: 0.5, Std_Y: 0.6, Std_Z: 0.7, Std_G: 0.8, Max_G: 4.9, IncorrectPosture: 0.4, Anomaly: false},
+	}
+
+	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&readings).Error; err != nil {
 		return err
 	}
 

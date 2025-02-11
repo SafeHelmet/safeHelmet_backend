@@ -77,32 +77,6 @@ type HelmetCategory struct {
 	Name string `json:"name" gorm:"not null"`
 }
 
-type Reading struct {
-	ID                    int       `json:"id" gorm:"primaryKey"`
-	ReadAt                time.Time `json:"read_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
-	HelmetID              int       `json:"helmet_id" gorm:"not null"`
-	Temperature           float64   `json:"temperature" gorm:"not null"`
-	Humidity              float64   `json:"humidity" gorm:"not null"`
-	Brightness            float64   `json:"brightness" gorm:"not null"`
-	Methane               bool      `json:"methane" gorm:"not null"`
-	CarbonMonoxide        bool      `json:"carbon_monoxide" gorm:"not null"`
-	SmokeDetection        bool      `json:"smoke_detection" gorm:"not null"`
-	UsesWeldingProtection bool      `json:"uses_welding_protection" gorm:"not null"`
-	UsesGasProtection     bool      `json:"uses_gas_protection" gorm:"not null"`
-	Avg_X                 float64   `json:"avg_X" gorm:"not null"`
-	Avg_Y                 float64   `json:"avg_Y" gorm:"not null"`
-	Avg_Z                 float64   `json:"avg_Z" gorm:"not null"`
-	Avg_G                 float64   `json:"avg_G" gorm:"not null"`
-	Std_X                 float64   `json:"std_X" gorm:"not null"`
-	Std_Y                 float64   `json:"std_Y" gorm:"not null"`
-	Std_Z                 float64   `json:"std_Z" gorm:"not null"`
-	Std_G                 float64   `json:"std_G" gorm:"not null"`
-	Max_G                 float64   `json:"max_G" gorm:"not null"`
-	IncorrectPosture      float64   `json:"incorrect_posture" gorm:"not null"`
-	Anomaly               bool      `json:"anomaly" gorm:"not null"`
-	Helmet                Helmet    `gorm:"foreignKey:HelmetID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-}
-
 type WorkerAttendance struct {
 	ID         int        `json:"id" gorm:"primaryKey"`
 	WorkerID   int        `json:"worker_id" gorm:"not null"`
@@ -113,6 +87,32 @@ type WorkerAttendance struct {
 	Worker     Worker     `gorm:"foreignKey:WorkerID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Worksite   Worksite   `gorm:"foreignKey:WorksiteID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Helmet     Helmet     `gorm:"foreignKey:HelmetID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+type Reading struct {
+	ID                    int              `json:"id" gorm:"primaryKey"`
+	ReadAt                time.Time        `json:"read_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
+	AttendanceID          int              `json:"attendance_id" gorm:"not null"`
+	Temperature           float64          `json:"temperature" gorm:"not null"`
+	Humidity              float64          `json:"humidity" gorm:"not null"`
+	Brightness            float64          `json:"brightness" gorm:"not null"`
+	Methane               bool             `json:"methane" gorm:"not null"`
+	CarbonMonoxide        bool             `json:"carbon_monoxide" gorm:"not null"`
+	SmokeDetection        bool             `json:"smoke_detection" gorm:"not null"`
+	UsesWeldingProtection bool             `json:"uses_welding_protection" gorm:"not null"`
+	UsesGasProtection     bool             `json:"uses_gas_protection" gorm:"not null"`
+	Avg_X                 float64          `json:"avg_X" gorm:"not null"`
+	Avg_Y                 float64          `json:"avg_Y" gorm:"not null"`
+	Avg_Z                 float64          `json:"avg_Z" gorm:"not null"`
+	Avg_G                 float64          `json:"avg_G" gorm:"not null"`
+	Std_X                 float64          `json:"std_X" gorm:"not null"`
+	Std_Y                 float64          `json:"std_Y" gorm:"not null"`
+	Std_Z                 float64          `json:"std_Z" gorm:"not null"`
+	Std_G                 float64          `json:"std_G" gorm:"not null"`
+	Max_G                 float64          `json:"max_G" gorm:"not null"`
+	IncorrectPosture      float64          `json:"incorrect_posture" gorm:"not null"`
+	Anomaly               bool             `json:"anomaly" gorm:"not null"`
+	Attendance            WorkerAttendance `gorm:"foreignKey:AttendanceID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 type WorksiteBossAssignment struct {
@@ -156,6 +156,11 @@ func (w *Worksite) BeforeDelete(tx *gorm.DB) (err error) {
 	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WorksiteWorkerAssignment{})
 	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WorkerAttendance{})
 	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WeatherData{})
+	return
+}
+
+func (w *WorkerAttendance) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Unscoped().Where("attendance_id = ?", w.ID).Delete(&Reading{})
 	return
 }
 
