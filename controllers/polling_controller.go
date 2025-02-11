@@ -15,7 +15,7 @@ func CheckRecentAnomaly(c *gin.Context) {
 
 	// Trova il casco specifico
 	var helmet models.Helmet
-	if err := db.Where("id = ?", helmetID).First(&helmet).Error; err != nil {
+	if err := db.Where("ID = ?", helmetID).First(&helmet).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Helmet not found"})
 		return
 	}
