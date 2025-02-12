@@ -32,7 +32,7 @@ func CheckRecentAnomaly(c *gin.Context) {
 	/// TODO: controllare se funziona
 	// Controlla se esiste almeno una rilevazione con un timestamp recente nel cantiere specifico
 	if err := db.Joins("JOIN worker_attendances ON worker_attendances.ID = readings.attendance_id").
-		Where("worker_attendances.worksite_id = ? AND readings.created_at > ? AND readings.anomaly = TRUE", worksite.ID, fiveMinutesAgo).
+		Where("worker_attendances.worksite_id = ? AND readings.read_at > ? AND readings.anomaly = TRUE", worksite.ID, fiveMinutesAgo).
 		Find(&readings).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
