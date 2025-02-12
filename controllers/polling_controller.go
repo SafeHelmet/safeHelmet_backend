@@ -10,22 +10,22 @@ import (
 
 func CheckRecentAnomaly(c *gin.Context) {
 	var readings []models.Reading
-	helmetID := c.Param("helmet_id")
+	helmetId := c.Param("helmet-id")
 	fiveMinutesAgo := time.Now().Add(-5 * time.Minute)
 
 	// Trova il casco specifico
 	var helmet models.Helmet
-	if err := db.Where("ID = ?", helmetID).First(&helmet).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Helmet not found"})
+	if err := db.First(&helmet, helmetId).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	// Trova il cantiere associato al casco
 	var worksite models.Worksite
 	if err := db.Joins("JOIN worker_attendances ON worker_attendances.worksite_id = worksites.id").
-		Where("worker_attendances.helmet_id = ?", helmetID).
+		Where("worker_attendances.helmet_id = ?", helmetId).
 		First(&worksite).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Worksite not found"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
