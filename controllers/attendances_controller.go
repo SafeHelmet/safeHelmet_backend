@@ -9,15 +9,14 @@ import (
 )
 
 func GetLastAttendanceDetails(c *gin.Context) {
+	worker_id := c.Param("worker_id")
+	worksite_id := c.Param("worksite_id")
+	helmet_id := c.Param("helmet_id")
+
 	var attendance models.WorkerAttendance
 
-	if err := c.ShouldBindJSON(&attendance); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	// Trovo l'ultima entry per worker_id, worksite_id, helmet_id
-	if err := db.Where("worker_id = ? AND worksite_id = ? AND helmet_id = ?", attendance.WorkerID, attendance.WorksiteID, attendance.HelmetID).
+	if err := db.Where("worker_id = ? AND worksite_id = ? AND helmet_id = ?", worker_id, worksite_id, helmet_id).
 		Last(&attendance).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

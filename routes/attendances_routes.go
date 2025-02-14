@@ -11,5 +11,5 @@ func RouteAttendances(r *gin.RouterGroup) {
 	r.GET("", controllers.GetAllAttendances)
 	r.GET("/:attendance_id", controllers.GetAttendanceDetails)
 
-	r.GET("/attendance-details", controllers.GetLastAttendanceDetails)
+	r.GET("/attendance-details/:worker_id/:worksite_id/:helmet_id", controllers.GetLastAttendanceDetails)
 }
