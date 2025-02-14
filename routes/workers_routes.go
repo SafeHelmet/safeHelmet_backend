@@ -10,6 +10,7 @@ func RouteWorkers(r *gin.RouterGroup) {
 	r.GET("", controllers.GetAllWorkers)
 	r.GET("/:worker-id", controllers.GetWorkerDetails)
 	r.GET("/:worker-id/worksite", controllers.GetWorksiteOfWorker)
+	r.GET("/:worker-id/readings", controllers.GetWorkerReadings)
 
 	r.GET("/:worker-id/attendance", controllers.GetWorkerAttendance)
 	r.GET("/:worker-id/attendance/last", controllers.GetLastWorkerAttendance)

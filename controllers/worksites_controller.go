@@ -86,8 +86,9 @@ func GetWorksiteReadings(c *gin.Context) {
 	worksiteId := c.Param("worksite-id")
 	var readings []models.Reading
 
-	subQuery := db.Model(&models.WorkerAttendance{}).Select("attendance_id").Where("worksite_id = ?", worksiteId)
-	if err := db.Where("attendance_id IN (?)", subQuery).Find(&readings).Error; err != nil {
+	if err := db.Joins("JOIN worker_attendances ON worker_attendances.ID = readings.attendance_id").
+		Where("worker_attendances.worksite_id = ?", worksiteId).
+		Find(&readings).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
