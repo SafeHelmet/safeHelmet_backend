@@ -113,7 +113,9 @@ func CreateReading(c *gin.Context) {
 
 	// Get worksite ID from helmetID
 	var worksite models.Worksite
-	if err := db.Where("worker_attendances.ID = ?", reading.AttendanceID).
+	if err := db.Table("worksites").
+		Joins("JOIN worker_attendances ON worker_attendances.worksite_id = worksites.id").
+		Where("worker_attendances.id = ?", reading.AttendanceID).
 		First(&worksite).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Worksite not found"})
 		return
