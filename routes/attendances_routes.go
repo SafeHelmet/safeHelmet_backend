@@ -14,4 +14,6 @@ func RouteAttendances(r *gin.RouterGroup) {
 	r.GET("/attendance-details/:worker_id/:worksite_id/:helmet_id", controllers.GetLastAttendanceDetails)
 
 	r.GET("/check-existance/:worker_id/:worksite_id/:helmet_id", controllers.CheckAttendanceExistance)
+
+	r.PUT("/:attendance_id", controllers.UpdateAttendance)
 }

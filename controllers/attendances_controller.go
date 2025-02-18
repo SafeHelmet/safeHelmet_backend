@@ -109,3 +109,27 @@ func CheckAttendanceExistance(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"attendance": newAttendance})
 }
+
+func UpdateAttendance(c *gin.Context) {
+	attendanceId := c.Param("attendance_id")
+	var attendance models.WorkerAttendance
+
+	if err := db.First(&attendance, attendanceId).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Attendance not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+		return
+	}
+
+	now := time.Now()
+	attendance.EndAt = &now
+
+	if err := db.Save(&attendance).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, attendance)
+}
