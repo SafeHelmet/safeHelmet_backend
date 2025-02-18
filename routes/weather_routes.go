@@ -8,6 +8,6 @@ import (
 
 func RouteWeather(r *gin.RouterGroup) {
 	r.GET("/:worksite-id", controllers.GetAllWorksiteWeather)
-	r.GET("/last/:worksite-id", controllers.GetLastWorksiteWeather)
+	r.GET("/:worksite-id/last", controllers.GetLastWorksiteWeather)
 	r.GET("", controllers.GetAllWeatherReadings)
 }
