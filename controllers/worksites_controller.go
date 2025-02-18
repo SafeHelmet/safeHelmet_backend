@@ -1,11 +1,13 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 	"safecap_backend/models"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func GetAllWorksites(c *gin.Context) {
@@ -43,7 +45,7 @@ func GetWorksiteDetails(c *gin.Context) {
 	var worksite models.Worksite
 
 	if err := db.First(&worksite, worksiteId).Error; err != nil {
-		if err.Error() == "record not found" {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Worksite not found"})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -107,9 +109,14 @@ func AssignWorkerToWorksite(c *gin.Context) {
 		return
 	}
 
-	// Creazione dell'assegnazione nel database
-	if err := db.Create(&assignment).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	if err := db.Where("worker_id = ? AND worksite_id = ?", assignment.WorkerID, assignment.WorksiteID).First(&assignment).Error; err != nil {
+		// Creazione dell'assegnazione nel database
+		if err := db.Create(&assignment).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Worker already assigned to worksite"})
 		return
 	}
 
