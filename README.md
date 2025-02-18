@@ -14,4 +14,4 @@ The backend also provides APIs for managing polling from workers' smartphones an
 
 Additionally, the backend provides APIs to the frontend for all CRUD operations and managing various worksites, workers, and work shifts.
 
-[Frontend APIs documentation](https://github.com/SafeHelmet/safeHelmet_backend/blob/100fe108be156cfcd649adb5d58751167c701836/API_DOCUMENTATION.md#assign-worker-to-worksite)
+[Frontend APIs documentation](https://github.com/SafeHelmet/safeHelmet_backend/blob/main/API_DOCUMENTATION.md)
