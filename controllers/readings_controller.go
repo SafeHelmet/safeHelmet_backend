@@ -158,7 +158,7 @@ func CreateReading(c *gin.Context) {
 	}
 
 	// Brightness Anomaly check
-	if math.Abs(reading.Brightness-weather.Brightness) > worksite.BrightnessThreshold && !reading.UsesWeldingProtection {
+	if reading.Brightness > weather.Brightness+worksite.BrightnessThreshold && !reading.UsesWeldingProtection {
 		reading.Anomaly = true
 		reading.AnomalousBrightness = true
 	}
