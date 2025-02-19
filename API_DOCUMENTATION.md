@@ -225,6 +225,26 @@ Example:
 /api/v1/helmets/1/readings
 ```
 
+### Get Helmet Readings
+- **URL**: `/api/v1/helmets/helmet-categories`
+- **Method**: `GET`
+- **Description**: Retrieves a list of all helmets categories.
+
+Example:
+```
+/api/v1/helmets/helmet-categories
+```
+
+### Get Helmet Readings
+- **URL**: `/api/v1/helmets/helmet-categories/:category-id`
+- **Method**: `GET`
+- **Description**: Retrieves details of a specific helmet category by ID.
+
+Example:
+```
+/api/v1/helmets/1/readings
+```
+
 ### Create Helmet
 - **URL**: `/api/v1/helmets`
 - **Method**: `POST`
