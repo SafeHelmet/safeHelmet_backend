@@ -67,7 +67,7 @@ func WeatherAPI(db *gorm.DB, lat string, lon string, worksiteID int) {
 	weather.Humidity = float64(humidity)
 	weather.WorksiteID = worksiteID
 
-	weather.Brightness = 5000 /// TODO: aggiungere la luminosità
+	weather.Brightness = 500 /// TODO: aggiungere la luminosità
 
 	if err := db.Create(&weather).Error; err != nil {
 		log.Printf("Error in weather POST: %v", err)
