@@ -171,39 +171,42 @@ func SeedDatabase(db *gorm.DB) error {
 		return err
 	}
 
+	// Recupera gli ID generati automaticamente per i boss
+	var bossesFromDB []models.Boss
+	db.Find(&bossesFromDB)
+
+	var worksitesFromDB []models.Worksite
+	db.Find(&worksitesFromDB)
+
 	// Crea record di esempio per la tabella WorksiteBossAssignment
 	worksiteBossAssignments := []models.WorksiteBossAssignment{
-		{BossID: workersFromDB[0].ID, WorksiteID: worksites[0].ID},
-		{BossID: workersFromDB[1].ID, WorksiteID: worksites[1].ID},
-		{BossID: workersFromDB[2].ID, WorksiteID: worksites[2].ID},
-		{BossID: workersFromDB[3].ID, WorksiteID: worksites[3].ID},
-		{BossID: workersFromDB[4].ID, WorksiteID: worksites[4].ID},
-		{BossID: workersFromDB[5].ID, WorksiteID: worksites[5].ID},
-		{BossID: workersFromDB[6].ID, WorksiteID: worksites[6].ID},
-		{BossID: workersFromDB[7].ID, WorksiteID: worksites[7].ID},
-		{BossID: workersFromDB[8].ID, WorksiteID: worksites[8].ID},
-		{BossID: workersFromDB[9].ID, WorksiteID: worksites[9].ID},
+		{BossID: bossesFromDB[0].ID, WorksiteID: worksitesFromDB[0].ID},
+		{BossID: bossesFromDB[1].ID, WorksiteID: worksitesFromDB[1].ID},
+		{BossID: bossesFromDB[2].ID, WorksiteID: worksitesFromDB[2].ID},
+		{BossID: bossesFromDB[3].ID, WorksiteID: worksitesFromDB[3].ID},
+		{BossID: bossesFromDB[4].ID, WorksiteID: worksitesFromDB[4].ID},
+		{BossID: bossesFromDB[5].ID, WorksiteID: worksitesFromDB[5].ID},
+		{BossID: bossesFromDB[6].ID, WorksiteID: worksitesFromDB[6].ID},
+		{BossID: bossesFromDB[7].ID, WorksiteID: worksitesFromDB[7].ID},
+		{BossID: bossesFromDB[8].ID, WorksiteID: worksitesFromDB[8].ID},
+		{BossID: bossesFromDB[9].ID, WorksiteID: worksitesFromDB[9].ID},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&worksiteBossAssignments).Error; err != nil {
 		return err
 	}
 
-	// Recupera gli ID generati automaticamente per i boss
-	var bossesFromDB []models.Boss
-	db.Find(&bossesFromDB)
-
 	// Crea record di esempio per la tabella WorksiteWorkerAssignment
 	worksiteWorkerAssignments := []models.WorksiteWorkerAssignment{
-		{WorksiteID: worksites[0].ID, WorkerID: workersFromDB[0].ID, AssignedBy: bossesFromDB[0].ID},
-		{WorksiteID: worksites[1].ID, WorkerID: workersFromDB[1].ID, AssignedBy: bossesFromDB[1].ID},
-		{WorksiteID: worksites[2].ID, WorkerID: workersFromDB[2].ID, AssignedBy: bossesFromDB[2].ID},
-		{WorksiteID: worksites[3].ID, WorkerID: workersFromDB[3].ID, AssignedBy: bossesFromDB[3].ID},
-		{WorksiteID: worksites[4].ID, WorkerID: workersFromDB[4].ID, AssignedBy: bossesFromDB[4].ID},
-		{WorksiteID: worksites[5].ID, WorkerID: workersFromDB[5].ID, AssignedBy: bossesFromDB[5].ID},
-		{WorksiteID: worksites[6].ID, WorkerID: workersFromDB[6].ID, AssignedBy: bossesFromDB[6].ID},
-		{WorksiteID: worksites[7].ID, WorkerID: workersFromDB[7].ID, AssignedBy: bossesFromDB[7].ID},
-		{WorksiteID: worksites[8].ID, WorkerID: workersFromDB[8].ID, AssignedBy: bossesFromDB[8].ID},
-		{WorksiteID: worksites[9].ID, WorkerID: workersFromDB[9].ID, AssignedBy: bossesFromDB[9].ID},
+		{WorksiteID: worksitesFromDB[0].ID, WorkerID: workersFromDB[0].ID, AssignedBy: bossesFromDB[0].ID},
+		{WorksiteID: worksitesFromDB[1].ID, WorkerID: workersFromDB[1].ID, AssignedBy: bossesFromDB[1].ID},
+		{WorksiteID: worksitesFromDB[2].ID, WorkerID: workersFromDB[2].ID, AssignedBy: bossesFromDB[2].ID},
+		{WorksiteID: worksitesFromDB[3].ID, WorkerID: workersFromDB[3].ID, AssignedBy: bossesFromDB[3].ID},
+		{WorksiteID: worksitesFromDB[4].ID, WorkerID: workersFromDB[4].ID, AssignedBy: bossesFromDB[4].ID},
+		{WorksiteID: worksitesFromDB[5].ID, WorkerID: workersFromDB[5].ID, AssignedBy: bossesFromDB[5].ID},
+		{WorksiteID: worksitesFromDB[6].ID, WorkerID: workersFromDB[6].ID, AssignedBy: bossesFromDB[6].ID},
+		{WorksiteID: worksitesFromDB[7].ID, WorkerID: workersFromDB[7].ID, AssignedBy: bossesFromDB[7].ID},
+		{WorksiteID: worksitesFromDB[8].ID, WorkerID: workersFromDB[8].ID, AssignedBy: bossesFromDB[8].ID},
+		{WorksiteID: worksitesFromDB[9].ID, WorkerID: workersFromDB[9].ID, AssignedBy: bossesFromDB[9].ID},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&worksiteWorkerAssignments).Error; err != nil {
 		return err
