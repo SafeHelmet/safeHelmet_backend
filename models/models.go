@@ -94,10 +94,15 @@ type Reading struct {
 	ReadAt                time.Time        `json:"read_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
 	AttendanceID          int              `json:"attendance_id" gorm:"not null"`
 	Temperature           float64          `json:"temperature" gorm:"not null"`
+	WeatherTemperature    float64          `json:"weather_temperature" gorm:"not null"`
+	WeatherTemperatureMax float64          `json:"weather_temperature_max" gorm:"not null"`
+	WeatherTemperatureMin float64          `json:"weather_temperature_min" gorm:"not null"`
 	AnomalousTemperature  bool             `json:"anomalous_temperature" gorm:"not null"`
 	Humidity              float64          `json:"humidity" gorm:"not null"`
+	WeatherHumidity       float64          `json:"weather_humidity" gorm:"not null"`
 	AnomalousHumidity     bool             `json:"anomalous_humidity" gorm:"not null"`
 	Brightness            float64          `json:"brightness" gorm:"not null"`
+	WeatherBrightness     float64          `json:"weather_brightness" gorm:"not null"`
 	AnomalousBrightness   bool             `json:"anomalous_brightness" gorm:"not null"`
 	Methane               bool             `json:"methane" gorm:"not null"`
 	CarbonMonoxide        bool             `json:"carbon_monoxide" gorm:"not null"`

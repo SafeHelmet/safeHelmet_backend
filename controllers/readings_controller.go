@@ -130,6 +130,12 @@ func CreateReading(c *gin.Context) {
 		return
 	}
 
+	reading.WeatherTemperatureMax = weather.TempMax
+	reading.WeatherTemperatureMin = weather.TempMin
+	reading.WeatherTemperature = weather.Temp
+	reading.WeatherHumidity = weather.Humidity
+	reading.WeatherBrightness = weather.Brightness
+
 	// Initialize booleand values
 	reading.Anomaly = false
 	reading.AnomalousTemperature = false
