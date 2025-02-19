@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"math"
 	"net/http"
 	"safecap_backend/models"
 
@@ -151,13 +152,13 @@ func CreateReading(c *gin.Context) {
 	}
 
 	// Humidity Anomaly check
-	if reading.Humidity > weather.Humidity+worksite.HumidityThreshold {
+	if math.Abs(reading.Humidity-weather.Humidity) > worksite.HumidityThreshold {
 		reading.Anomaly = true
 		reading.AnomalousHumidity = true
 	}
 
 	// Brightness Anomaly check
-	if reading.Brightness > weather.Brightness+worksite.BrightnessThreshold && !reading.UsesWeldingProtection {
+	if math.Abs(reading.Brightness-weather.Brightness) > worksite.BrightnessThreshold && !reading.UsesWeldingProtection {
 		reading.Anomaly = true
 		reading.AnomalousBrightness = true
 	}
