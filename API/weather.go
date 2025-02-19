@@ -26,7 +26,7 @@ type WeatherResponse struct {
 	} `json:"main"`
 }
 
-func weatherAPI(db *gorm.DB, lat, lon string, worksiteID int) {
+func WeatherAPI(db *gorm.DB, lat string, lon string, worksiteID int) {
 	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=%s&appid=%s", lat, lon, "metric", os.Getenv("WEATHER_API_KEY"))
 
 	// Esegui la richiesta HTTP GET
@@ -102,7 +102,7 @@ func StartAPICallScheduler(db *gorm.DB) {
 		} else {
 			log.Println("Calling weather API at:", now)
 			for _, worksite := range worksites {
-				weatherAPI(db, fmt.Sprintf("%f", worksite.Latitude), fmt.Sprintf("%f", worksite.Longitude), worksite.ID)
+				WeatherAPI(db, fmt.Sprintf("%f", worksite.Latitude), fmt.Sprintf("%f", worksite.Longitude), worksite.ID)
 			}
 		}
 

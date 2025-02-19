@@ -3,7 +3,8 @@ package controllers
 import (
 	"errors"
 	"net/http"
-	"safecap_backend/models"
+	"safecap_backend/API"    // Import the API package
+	"safecap_backend/models" // Import the API package
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -149,6 +150,13 @@ func CreateWorksite(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	if err := db.Last(&worksite).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	API.WeatherAPI(db, strconv.FormatFloat(worksite.Latitude, 'f', 6, 64), strconv.FormatFloat(worksite.Longitude, 'f', 6, 64), worksite.ID)
 
 	c.JSON(http.StatusOK, worksite)
 }
