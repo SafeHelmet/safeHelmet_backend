@@ -191,7 +191,6 @@ func (b *Boss) BeforeDelete(tx *gorm.DB) (err error) {
 
 // Helmet delete hooks
 func (h *Helmet) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Unscoped().Where("helmet_id = ?", h.ID).Delete(&Reading{})
 	tx.Unscoped().Where("helmet_id = ?", h.ID).Delete(&WorkerAttendance{})
 	return
 }
