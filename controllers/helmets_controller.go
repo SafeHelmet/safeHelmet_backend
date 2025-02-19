@@ -83,6 +83,29 @@ func GetHelmetReadings(c *gin.Context) {
 	c.JSON(http.StatusOK, readings)
 }
 
+func GetHelmetCategories(c *gin.Context) {
+	var categories []models.HelmetCategory
+
+	if err := db.Find(&categories).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, categories)
+}
+
+func GetHelmetCategoryDetails(c *gin.Context) {
+	categoryId := c.Param("category-id")
+	var category models.HelmetCategory
+
+	if err := db.First(&category, categoryId).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, category)
+}
+
 func UpdateHelmet(c *gin.Context) {
 	helmetId := c.Param("helmet-id")
 	var helmet models.Helmet
