@@ -130,22 +130,30 @@ func CreateReading(c *gin.Context) {
 		return
 	}
 
-	// Check if there are any anomalies
+	// Initialize booleand values
 	reading.Anomaly = false
+	reading.AnomalousTemperature = false
+	reading.AnomalousHumidity = false
+	reading.AnomalousBrightness = false
+	reading.AnomalousMaxG = false
+	reading.AnomalousPosture = false
 
 	// Temperature Anomaly check
 	if reading.Temperature-weather.TempMax > worksite.TemperatureThreshold || weather.TempMin-reading.Temperature > worksite.TemperatureThreshold {
 		reading.Anomaly = true
+		reading.AnomalousTemperature = true
 	}
 
 	// Humidity Anomaly check
 	if reading.Humidity > weather.Humidity+worksite.HumidityThreshold {
 		reading.Anomaly = true
+		reading.AnomalousHumidity = true
 	}
 
 	// Brightness Anomaly check
 	if reading.Brightness > weather.Brightness+worksite.BrightnessThreshold && !reading.UsesWeldingProtection {
 		reading.Anomaly = true
+		reading.AnomalousBrightness = true
 	}
 
 	// Gas Anomaly check
@@ -153,14 +161,16 @@ func CreateReading(c *gin.Context) {
 		reading.Anomaly = true
 	}
 
-	// Posture Anomaly check
-	if reading.IncorrectPosture > worksite.PostureThreshold {
-		reading.Anomaly = true
-	}
-
 	// Crash Anomaly check
 	if reading.Max_G > worksite.MaxGThreshold {
 		reading.Anomaly = true
+		reading.AnomalousMaxG = true
+	}
+
+	// Posture Anomaly check
+	if reading.IncorrectPosture > worksite.PostureThreshold {
+		reading.Anomaly = true
+		reading.AnomalousPosture = true
 	}
 
 	if err := db.Create(&reading).Error; err != nil {
@@ -168,7 +178,7 @@ func CreateReading(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, reading)
+	c.JSON(http.StatusCreated, gin.H{"reading": reading, "anomaly": reading.Anomaly})
 }
 
 func DeleteReading(c *gin.Context) {

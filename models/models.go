@@ -94,8 +94,11 @@ type Reading struct {
 	ReadAt                time.Time        `json:"read_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
 	AttendanceID          int              `json:"attendance_id" gorm:"not null"`
 	Temperature           float64          `json:"temperature" gorm:"not null"`
+	AnomalousTemperature  bool             `json:"anomalous_temperature" gorm:"not null"`
 	Humidity              float64          `json:"humidity" gorm:"not null"`
+	AnomalousHumidity     bool             `json:"anomalous_humidity" gorm:"not null"`
 	Brightness            float64          `json:"brightness" gorm:"not null"`
+	AnomalousBrightness   bool             `json:"anomalous_brightness" gorm:"not null"`
 	Methane               bool             `json:"methane" gorm:"not null"`
 	CarbonMonoxide        bool             `json:"carbon_monoxide" gorm:"not null"`
 	SmokeDetection        bool             `json:"smoke_detection" gorm:"not null"`
@@ -110,7 +113,9 @@ type Reading struct {
 	Std_Z                 float64          `json:"std_Z" gorm:"not null"`
 	Std_G                 float64          `json:"std_G" gorm:"not null"`
 	Max_G                 float64          `json:"max_G" gorm:"not null"`
+	AnomalousMaxG         bool             `json:"anomalous_max_g" gorm:"not null"`
 	IncorrectPosture      float64          `json:"incorrect_posture" gorm:"not null"`
+	AnomalousPosture      bool             `json:"anomalous_posture" gorm:"not null"`
 	Anomaly               bool             `json:"anomaly" gorm:"not null"`
 	Attendance            WorkerAttendance `gorm:"foreignKey:AttendanceID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
