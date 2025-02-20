@@ -118,8 +118,8 @@ func SeedDatabase(db *gorm.DB) error {
 
 	// Crea record di esempio per la tabella Helmet
 	helmets := []models.Helmet{
-		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac0", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "mac1", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "AC:67:B2:05:02:8E", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "AC:15:18:E5:8E:82", CreatedAt: time.Now()},
 		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac2", CreatedAt: time.Now()},
 		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "mac3", CreatedAt: time.Now()},
 		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac4", CreatedAt: time.Now()},
