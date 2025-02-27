@@ -11,7 +11,7 @@ import (
 func CheckRecentAnomaly(c *gin.Context) {
 	var readings []models.Reading
 	helmetId := c.Param("helmet-id")
-	fiveMinutesAgo := time.Now().Add(-5 * time.Minute)
+	oneAndHalfMinutesAgo := time.Now().Add(-90 * time.Second)
 
 	// Trova il casco specifico
 	var helmet models.Helmet
@@ -32,7 +32,7 @@ func CheckRecentAnomaly(c *gin.Context) {
 	/// TODO: controllare se funziona
 	// Controlla se esiste almeno una rilevazione con un timestamp recente nel cantiere specifico
 	if err := db.Joins("JOIN worker_attendances ON worker_attendances.ID = readings.attendance_id").
-		Where("worker_attendances.worksite_id = ? AND readings.read_at > ? AND readings.anomaly = TRUE", worksite.ID, fiveMinutesAgo).
+		Where("worker_attendances.worksite_id = ? AND readings.read_at > ? AND readings.anomaly = TRUE", worksite.ID, oneAndHalfMinutesAgo).
 		Find(&readings).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
