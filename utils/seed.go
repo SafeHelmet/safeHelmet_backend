@@ -55,29 +55,6 @@ func SeedDatabase(db *gorm.DB) error {
 		return err
 	}
 
-	/* // Recupera gli ID generati automaticamente per i lavoratori e le specializzazioni
-	var workersFromDB []models.Worker
-	var specializationsFromDB []models.Specialization
-	db.Find(&workersFromDB)
-	db.Find(&specializationsFromDB)
-
-	// Crea record di esempio per la tabella WorkerSpecialization
-	workerSpecializations := []models.WorkerSpecialization{
-		{WorkerID: workersFromDB[0].ID, SpecializationID: specializationsFromDB[0].ID},
-		{WorkerID: workersFromDB[1].ID, SpecializationID: specializationsFromDB[1].ID},
-		{WorkerID: workersFromDB[2].ID, SpecializationID: specializationsFromDB[2].ID},
-		{WorkerID: workersFromDB[3].ID, SpecializationID: specializationsFromDB[3].ID},
-		{WorkerID: workersFromDB[4].ID, SpecializationID: specializationsFromDB[4].ID},
-		{WorkerID: workersFromDB[5].ID, SpecializationID: specializationsFromDB[5].ID},
-		{WorkerID: workersFromDB[6].ID, SpecializationID: specializationsFromDB[6].ID},
-		{WorkerID: workersFromDB[7].ID, SpecializationID: specializationsFromDB[7].ID},
-		{WorkerID: workersFromDB[8].ID, SpecializationID: specializationsFromDB[8].ID},
-		{WorkerID: workersFromDB[9].ID, SpecializationID: specializationsFromDB[9].ID},
-	}
-	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&workerSpecializations).Error; err != nil {
-		return err
-	}
-
 	// Crea record di esempio per la tabella HelmetCategory
 	helmetCategories := []models.HelmetCategory{
 		{Name: "Standard"},
@@ -98,6 +75,29 @@ func SeedDatabase(db *gorm.DB) error {
 		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "F0:24:F9:59:02:E2", CreatedAt: time.Now()},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&helmets).Error; err != nil {
+		return err
+	}
+
+	/* // Recupera gli ID generati automaticamente per i lavoratori e le specializzazioni
+	var workersFromDB []models.Worker
+	var specializationsFromDB []models.Specialization
+	db.Find(&workersFromDB)
+	db.Find(&specializationsFromDB)
+
+	// Crea record di esempio per la tabella WorkerSpecialization
+	workerSpecializations := []models.WorkerSpecialization{
+		{WorkerID: workersFromDB[0].ID, SpecializationID: specializationsFromDB[0].ID},
+		{WorkerID: workersFromDB[1].ID, SpecializationID: specializationsFromDB[1].ID},
+		{WorkerID: workersFromDB[2].ID, SpecializationID: specializationsFromDB[2].ID},
+		{WorkerID: workersFromDB[3].ID, SpecializationID: specializationsFromDB[3].ID},
+		{WorkerID: workersFromDB[4].ID, SpecializationID: specializationsFromDB[4].ID},
+		{WorkerID: workersFromDB[5].ID, SpecializationID: specializationsFromDB[5].ID},
+		{WorkerID: workersFromDB[6].ID, SpecializationID: specializationsFromDB[6].ID},
+		{WorkerID: workersFromDB[7].ID, SpecializationID: specializationsFromDB[7].ID},
+		{WorkerID: workersFromDB[8].ID, SpecializationID: specializationsFromDB[8].ID},
+		{WorkerID: workersFromDB[9].ID, SpecializationID: specializationsFromDB[9].ID},
+	}
+	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&workerSpecializations).Error; err != nil {
 		return err
 	}
 
