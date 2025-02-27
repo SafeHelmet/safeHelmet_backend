@@ -3,8 +3,15 @@ package models
 import (
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
+
+var validate *validator.Validate
+
+func init() {
+	validate = validator.New()
+}
 
 type Worksite struct {
 	ID                   int       `json:"id" gorm:"primaryKey"`
@@ -205,4 +212,41 @@ func (s *Specialization) BeforeDelete(tx *gorm.DB) (err error) {
 func (hc *HelmetCategory) BeforeDelete(tx *gorm.DB) (err error) {
 	tx.Unscoped().Where("category_id = ?", hc.ID).Delete(&Helmet{})
 	return
+}
+
+func (w *Worksite) BeforeCreate(tx *gorm.DB) (err error) {
+	return validate.Struct(w)
+}
+
+func (w *WorkerAttendance) BeforeCreate(tx *gorm.DB) (err error) {
+	return validate.Struct(w)
+}
+
+// Worker delete hooks
+func (w *Worker) BeforeCreate(tx *gorm.DB) (err error) {
+	return validate.Struct(w)
+}
+
+// Boss delete hooks
+func (b *Boss) BeforeCreate(tx *gorm.DB) (err error) {
+	return validate.Struct(b)
+}
+
+// Helmet delete hooks
+func (h *Helmet) BeforeCreate(tx *gorm.DB) (err error) {
+	return validate.Struct(h)
+}
+
+// Specialization delete hooks
+func (s *Specialization) BeforeCreate(tx *gorm.DB) (err error) {
+	return validate.Struct(s)
+}
+
+// HelmetCategory delete hooks
+func (hc *HelmetCategory) BeforeCreate(tx *gorm.DB) (err error) {
+	return validate.Struct(hc)
+}
+
+func (r *Reading) BeforeCreate(tx *gorm.DB) (err error) {
+	return validate.Struct(r)
 }
