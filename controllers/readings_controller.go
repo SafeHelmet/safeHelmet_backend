@@ -180,26 +180,6 @@ func CreateReading(c *gin.Context) {
 		reading.AnomalousPosture = true
 	}
 
-	// Round all float values to 1 decimal place
-	reading.Temperature = math.Round(reading.Temperature*10) / 10
-	reading.WeatherTemperature = math.Round(reading.WeatherTemperature*10) / 10
-	reading.WeatherTemperatureMax = math.Round(reading.WeatherTemperatureMax*10) / 10
-	reading.WeatherTemperatureMin = math.Round(reading.WeatherTemperatureMin*10) / 10
-	reading.Humidity = math.Round(reading.Humidity*10) / 10
-	reading.WeatherHumidity = math.Round(reading.WeatherHumidity*10) / 10
-	reading.Brightness = math.Round(reading.Brightness*10) / 10
-	reading.WeatherBrightness = math.Round(reading.WeatherBrightness*10) / 10
-	reading.Avg_X = math.Round(reading.Avg_X*10) / 10
-	reading.Avg_Y = math.Round(reading.Avg_Y*10) / 10
-	reading.Avg_Z = math.Round(reading.Avg_Z*10) / 10
-	reading.Avg_G = math.Round(reading.Avg_G*10) / 10
-	reading.Std_X = math.Round(reading.Std_X*10) / 10
-	reading.Std_Y = math.Round(reading.Std_Y*10) / 10
-	reading.Std_Z = math.Round(reading.Std_Z*10) / 10
-	reading.Std_G = math.Round(reading.Std_G*10) / 10
-	reading.Max_G = math.Round(reading.Max_G*10) / 10
-	reading.IncorrectPosture = math.Round(reading.IncorrectPosture*10) / 10
-
 	if err := db.Create(&reading).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

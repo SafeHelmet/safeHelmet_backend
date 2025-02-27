@@ -120,14 +120,7 @@ func SeedDatabase(db *gorm.DB) error {
 	helmets := []models.Helmet{
 		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "AC:67:B2:05:02:8E", CreatedAt: time.Now()},
 		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "AC:15:18:E5:8E:82", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac2", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "mac3", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac4", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "mac5", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac6", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "mac7", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "mac8", CreatedAt: time.Now()},
-		{CategoryID: helmetCategoriesFromDB[1].ID, MACAddress: "mac9", CreatedAt: time.Now()},
+		{CategoryID: helmetCategoriesFromDB[0].ID, MACAddress: "F0:24:F9:59:02:E2", CreatedAt: time.Now()},
 	}
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&helmets).Error; err != nil {
 		return err
