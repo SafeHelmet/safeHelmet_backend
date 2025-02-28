@@ -52,7 +52,6 @@ func GetReadingWorker(c *gin.Context) {
 		Joins("JOIN worker_attendances ON worker_attendances.worker_id = workers.id").
 		Joins("JOIN readings ON readings.attendance_id = worker_attendances.ID").
 		Where("readings.id = ?", readingId).
-		Where("worker_attendances.end_at IS NULL"). // Considera solo chi è attualmente presente
 		Scan(&worker).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -71,7 +70,6 @@ func GetReadingWorksite(c *gin.Context) {
 		Joins("JOIN worker_attendances ON worker_attendances.worksite_id = worksites.id").
 		Joins("JOIN readings ON readings.attendance_id = worker_attendances.ID").
 		Where("readings.id = ?", readingId).
-		Where("worker_attendances.end_at IS NULL"). // Considera solo chi è attualmente presente
 		Scan(&worksite).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
