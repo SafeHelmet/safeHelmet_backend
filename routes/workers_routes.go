@@ -19,7 +19,7 @@ func RouteWorkers(r *gin.RouterGroup) {
 	r.POST("", controllers.CreateWorker)
 
 	r.PUT("/:worker-id", controllers.UpdateWorker)
-	r.PUT("/attendance/:attendance-id", controllers.UpdateWorkerAttendance)
+	r.GET("/attendance/:attendance-id", controllers.UpdateWorkerAttendance)
 
 	r.DELETE("/:worker-id", controllers.DeleteWorker)
 }
