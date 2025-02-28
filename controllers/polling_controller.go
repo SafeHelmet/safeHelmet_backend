@@ -29,7 +29,6 @@ func CheckRecentAnomaly(c *gin.Context) {
 		return
 	}
 
-	/// TODO: controllare se funziona
 	// Controlla se esiste almeno una rilevazione con un timestamp recente nel cantiere specifico
 	if err := db.Joins("JOIN worker_attendances ON worker_attendances.ID = readings.attendance_id").
 		Where("worker_attendances.worksite_id = ? AND readings.read_at > ? AND readings.anomaly = TRUE", worksite.ID, oneAndHalfMinutesAgo).
@@ -37,11 +36,6 @@ func CheckRecentAnomaly(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	/// TODO: magari ritornare true/false
-	// Se ci sono letture recenti anomale
-	exists := len(readings) > 0
-
 	// Restituisci il risultato
-	c.JSON(http.StatusOK, gin.H{"anomaly_detected": exists})
+	c.JSON(http.StatusOK, gin.H{"Anomalies": len(readings)})
 }
