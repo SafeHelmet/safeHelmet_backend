@@ -168,18 +168,10 @@ func CreateWorkerAttendance(c *gin.Context) {
 
 func UpdateWorkerAttendance(c *gin.Context) {
 	var attendance models.WorkerAttendance
+	var attendanceId = c.Param("attendance-id")
 
-	// Binding del JSON ricevuto
-	if err := c.ShouldBindJSON(&attendance); err != nil {
+	if err := db.Where("id = ?", attendanceId).First(&attendance).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	// Trovo l'ultima entry per worker_id, worksite_id, helmet_id
-	if err := db.Where("worker_id = ? AND worksite_id = ? AND helmet_id = ?", attendance.WorkerID, attendance.WorksiteID, attendance.HelmetID).
-		Order("start_at DESC"). // Ordino per start_at in ordine decrescente
-		First(&attendance).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
