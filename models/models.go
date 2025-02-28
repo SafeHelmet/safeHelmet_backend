@@ -12,6 +12,14 @@ func RoundFloat(val float64, precision int) float64 {
 	return math.Round(val*ratio) / ratio
 }
 
+func Truncate(string string, length int) string {
+	if len(string) > length {
+		return string[:length]
+	}
+	return string
+}
+
+// Worksite model
 type Worksite struct {
 	ID                   int       `json:"id" gorm:"primaryKey"`
 	Name                 string    `json:"name" gorm:"not null;size:100"`
@@ -31,6 +39,29 @@ type Worksite struct {
 	MaxGThreshold        float64   `json:"max_g_threshold" gorm:"default:4;"`
 }
 
+func (w *Worksite) BeforeCreate(tx *gorm.DB) (err error) {
+	w.Name = Truncate(w.Name, 100)
+	w.Address = Truncate(w.Address, 255)
+	w.City = Truncate(w.City, 100)
+	w.State = Truncate(w.State, 100)
+	w.TemperatureThreshold = RoundFloat(w.TemperatureThreshold, 2)
+	w.HumidityThreshold = RoundFloat(w.HumidityThreshold, 2)
+	w.BrightnessThreshold = RoundFloat(w.BrightnessThreshold, 2)
+	w.PostureThreshold = RoundFloat(w.PostureThreshold, 2)
+	w.MaxGThreshold = RoundFloat(w.MaxGThreshold, 2)
+	return
+}
+
+// Worksites delete hooks
+func (w *Worksite) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WorksiteBossAssignment{})
+	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WorksiteWorkerAssignment{})
+	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WorkerAttendance{})
+	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WeatherData{})
+	return
+}
+
+// Worker model
 type Worker struct {
 	ID         int       `json:"id" gorm:"primaryKey"`
 	Name       string    `json:"name" gorm:"not null;size:100"`
@@ -44,6 +75,23 @@ type Worker struct {
 	UpdatedAt  time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
 }
 
+func (w *Worker) BeforeCreate(tx *gorm.DB) (err error) {
+	w.Name = Truncate(w.Name, 100)
+	w.Surname = Truncate(w.Surname, 100)
+	w.Phone = Truncate(w.Phone, 20)
+	w.FiscalCode = Truncate(w.FiscalCode, 20)
+	return
+}
+
+// Worker delete hooks
+func (w *Worker) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Unscoped().Where("worker_id = ?", w.ID).Delete(&WorkerSpecialization{})
+	tx.Unscoped().Where("worker_id = ?", w.ID).Delete(&WorkerAttendance{})
+	tx.Unscoped().Where("worker_id = ?", w.ID).Delete(&WorksiteWorkerAssignment{})
+	return
+}
+
+// Boss model
 type Boss struct {
 	ID         int       `json:"id" gorm:"primaryKey"`
 	Name       string    `json:"name" gorm:"not null;size:100"`
@@ -57,11 +105,39 @@ type Boss struct {
 	UpdatedAt  time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
 }
 
+func (b *Boss) BeforeCreate(tx *gorm.DB) (err error) {
+	b.Name = Truncate(b.Name, 100)
+	b.Surname = Truncate(b.Surname, 100)
+	b.Phone = Truncate(b.Phone, 20)
+	b.FiscalCode = Truncate(b.FiscalCode, 20)
+	return
+}
+
+// Boss delete hooks
+func (b *Boss) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Unscoped().Where("boss_id = ?", b.ID).Delete(&WorksiteBossAssignment{})
+	tx.Unscoped().Where("assigned_by = ?", b.ID).Delete(&WorksiteWorkerAssignment{})
+	return
+}
+
+// Specialization model
 type Specialization struct {
 	ID   int    `json:"id" gorm:"primaryKey"`
 	Name string `json:"name" gorm:"not null;size:100"`
 }
 
+func (s *Specialization) BeforeCreate(tx *gorm.DB) (err error) {
+	s.Name = Truncate(s.Name, 100)
+	return
+}
+
+// Specialization delete hooks
+func (s *Specialization) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Unscoped().Where("specialization_id = ?", s.ID).Delete(&WorkerSpecialization{})
+	return
+}
+
+// WorkerSpecialization model
 type WorkerSpecialization struct {
 	ID               int            `json:"id" gorm:"primaryKey"`
 	WorkerID         int            `json:"worker_id" gorm:"not null"`
@@ -70,19 +146,39 @@ type WorkerSpecialization struct {
 	Specialization   Specialization `gorm:"foreignKey:SpecializationID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
+// Helmet model
 type Helmet struct {
 	ID         int            `json:"id" gorm:"primaryKey"`
 	CategoryID int            `json:"category_id" gorm:"not null"`
 	CreatedAt  time.Time      `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 	Category   HelmetCategory `gorm:"foreignKey:CategoryID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	MACAddress string         `json:"mac_address" gorm:"not null;size:20"`
+	MACAddress string         `json:"mac_address" gorm:"not null;size:17"`
 }
 
+// Helmet delete hooks
+func (h *Helmet) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Unscoped().Where("helmet_id = ?", h.ID).Delete(&WorkerAttendance{})
+	return
+}
+
+// HelmetCategory model
 type HelmetCategory struct {
 	ID   int    `json:"id" gorm:"primaryKey"`
 	Name string `json:"name" gorm:"not null;size:100"`
 }
 
+func (h *HelmetCategory) BeforeCreate(tx *gorm.DB) (err error) {
+	h.Name = Truncate(h.Name, 100)
+	return
+}
+
+// HelmetCategory delete hooks
+func (hc *HelmetCategory) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Unscoped().Where("category_id = ?", hc.ID).Delete(&Helmet{})
+	return
+}
+
+// WorkerAttendance model
 type WorkerAttendance struct {
 	ID         int        `json:"id" gorm:"primaryKey"`
 	WorkerID   int        `json:"worker_id" gorm:"not null"`
@@ -95,6 +191,13 @@ type WorkerAttendance struct {
 	Helmet     Helmet     `gorm:"foreignKey:HelmetID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
+// WorkerAttendance delete hooks
+func (w *WorkerAttendance) BeforeDelete(tx *gorm.DB) (err error) {
+	tx.Unscoped().Where("attendance_id = ?", w.ID).Delete(&Reading{})
+	return
+}
+
+// Reading model
 type Reading struct {
 	ID                    int              `json:"id" gorm:"primaryKey"`
 	ReadAt                time.Time        `json:"read_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
@@ -131,88 +234,6 @@ type Reading struct {
 	Attendance            WorkerAttendance `gorm:"foreignKey:AttendanceID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
-type WorksiteBossAssignment struct {
-	ID         int        `json:"id" gorm:"primaryKey"`
-	BossID     int        `json:"boss_id" gorm:"not null"`
-	WorksiteID int        `json:"worksite_id" gorm:"not null"`
-	AssignedAt time.Time  `json:"assigned_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
-	ReleasedAt *time.Time `json:"released_at"`
-	Boss       Boss       `gorm:"foreignKey:BossID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Worksite   Worksite   `gorm:"foreignKey:WorksiteID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-}
-
-type WorksiteWorkerAssignment struct {
-	ID         int        `json:"id" gorm:"primaryKey"`
-	WorksiteID int        `json:"worksite_id" gorm:"not null"`
-	WorkerID   int        `json:"worker_id" gorm:"not null"`
-	AssignedBy int        `json:"assigned_by" gorm:"not null"`
-	AssignedAt time.Time  `json:"assigned_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
-	ReleasedAt *time.Time `json:"released_at"`
-	Worksite   Worksite   `gorm:"foreignKey:WorksiteID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Worker     Worker     `gorm:"foreignKey:WorkerID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Boss       Boss       `gorm:"foreignKey:AssignedBy;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-}
-
-type WeatherData struct {
-	WorksiteID int       `json:"worksite_id" gorm:"primaryKey"`
-	CreatedAt  time.Time `json:"created_at" gorm:"primaryKey;default:CURRENT_TIMESTAMP"`
-	Temp       float64   `json:"temp" gorm:"not null;"`
-	TempMin    float64   `json:"temp_min" gorm:"not null;"`
-	TempMax    float64   `json:"temp_max" gorm:"not null;"`
-	Humidity   float64   `json:"humidity" gorm:"not null;"`
-	Brightness float64   `json:"brightness" gorm:"not null;"`
-	C0         float64   `json:"c0" gorm:"default:0;"`
-	PM10       float64   `json:"pm10" gorm:"default:0;"`
-	Worksite   Worksite  `gorm:"foreignKey:WorksiteID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-}
-
-// Worksites delete hooks
-func (w *Worksite) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WorksiteBossAssignment{})
-	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WorksiteWorkerAssignment{})
-	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WorkerAttendance{})
-	tx.Unscoped().Where("worksite_id = ?", w.ID).Delete(&WeatherData{})
-	return
-}
-
-func (w *WorkerAttendance) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Unscoped().Where("attendance_id = ?", w.ID).Delete(&Reading{})
-	return
-}
-
-// Worker delete hooks
-func (w *Worker) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Unscoped().Where("worker_id = ?", w.ID).Delete(&WorkerSpecialization{})
-	tx.Unscoped().Where("worker_id = ?", w.ID).Delete(&WorkerAttendance{})
-	tx.Unscoped().Where("worker_id = ?", w.ID).Delete(&WorksiteWorkerAssignment{})
-	return
-}
-
-// Boss delete hooks
-func (b *Boss) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Unscoped().Where("boss_id = ?", b.ID).Delete(&WorksiteBossAssignment{})
-	tx.Unscoped().Where("assigned_by = ?", b.ID).Delete(&WorksiteWorkerAssignment{})
-	return
-}
-
-// Helmet delete hooks
-func (h *Helmet) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Unscoped().Where("helmet_id = ?", h.ID).Delete(&WorkerAttendance{})
-	return
-}
-
-// Specialization delete hooks
-func (s *Specialization) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Unscoped().Where("specialization_id = ?", s.ID).Delete(&WorkerSpecialization{})
-	return
-}
-
-// HelmetCategory delete hooks
-func (hc *HelmetCategory) BeforeDelete(tx *gorm.DB) (err error) {
-	tx.Unscoped().Where("category_id = ?", hc.ID).Delete(&Helmet{})
-	return
-}
-
 func (r *Reading) BeforeCreate(tx *gorm.DB) (err error) {
 	r.Temperature = RoundFloat(r.Temperature, 2)
 	r.WeatherTemperature = RoundFloat(r.WeatherTemperature, 2)
@@ -235,13 +256,42 @@ func (r *Reading) BeforeCreate(tx *gorm.DB) (err error) {
 	return
 }
 
-func (w *Worksite) BeforeCreate(tx *gorm.DB) (err error) {
-	w.TemperatureThreshold = RoundFloat(w.TemperatureThreshold, 2)
-	w.HumidityThreshold = RoundFloat(w.HumidityThreshold, 2)
-	w.BrightnessThreshold = RoundFloat(w.BrightnessThreshold, 2)
-	w.PostureThreshold = RoundFloat(w.PostureThreshold, 2)
-	w.MaxGThreshold = RoundFloat(w.MaxGThreshold, 2)
-	return
+// WorksiteBossAssignment model
+type WorksiteBossAssignment struct {
+	ID         int        `json:"id" gorm:"primaryKey"`
+	BossID     int        `json:"boss_id" gorm:"not null"`
+	WorksiteID int        `json:"worksite_id" gorm:"not null"`
+	AssignedAt time.Time  `json:"assigned_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
+	ReleasedAt *time.Time `json:"released_at"`
+	Boss       Boss       `gorm:"foreignKey:BossID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Worksite   Worksite   `gorm:"foreignKey:WorksiteID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+// WorksiteWorkerAssignment model
+type WorksiteWorkerAssignment struct {
+	ID         int        `json:"id" gorm:"primaryKey"`
+	WorksiteID int        `json:"worksite_id" gorm:"not null"`
+	WorkerID   int        `json:"worker_id" gorm:"not null"`
+	AssignedBy int        `json:"assigned_by" gorm:"not null"`
+	AssignedAt time.Time  `json:"assigned_at" gorm:"not null;default:CURRENT_TIMESTAMP"`
+	ReleasedAt *time.Time `json:"released_at"`
+	Worksite   Worksite   `gorm:"foreignKey:WorksiteID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Worker     Worker     `gorm:"foreignKey:WorkerID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Boss       Boss       `gorm:"foreignKey:AssignedBy;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+// WeatherData model
+type WeatherData struct {
+	WorksiteID int       `json:"worksite_id" gorm:"primaryKey"`
+	CreatedAt  time.Time `json:"created_at" gorm:"primaryKey;default:CURRENT_TIMESTAMP"`
+	Temp       float64   `json:"temp" gorm:"not null;"`
+	TempMin    float64   `json:"temp_min" gorm:"not null;"`
+	TempMax    float64   `json:"temp_max" gorm:"not null;"`
+	Humidity   float64   `json:"humidity" gorm:"not null;"`
+	Brightness float64   `json:"brightness" gorm:"not null;"`
+	C0         float64   `json:"c0" gorm:"default:0;"`
+	PM10       float64   `json:"pm10" gorm:"default:0;"`
+	Worksite   Worksite  `gorm:"foreignKey:WorksiteID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 func (w *WeatherData) BeforeCreate(tx *gorm.DB) (err error) {
