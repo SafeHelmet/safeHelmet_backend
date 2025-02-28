@@ -21,22 +21,22 @@ func Truncate(string string, length int) string {
 
 // Worksite model
 type Worksite struct {
-	ID                   int       `json:"id" gorm:"primaryKey"`
-	Name                 string    `json:"name" gorm:"not null;size:100"`
-	CreatedAt            time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	Latitude             float64   `json:"latitude" gorm:"not null;"`
-	Longitude            float64   `json:"longitude" gorm:"not null;"`
-	Address              string    `json:"address" gorm:"size:255"`
-	City                 string    `json:"city" gorm:"not null;size:100"`
-	ZipCode              string    `json:"zip_code" gorm:"not null;size:20"`
-	State                string    `json:"state" gorm:"not null;size:100"`
-	StartAt              time.Time `json:"start_date_of_work" gorm:"not null"`
-	EndAt                time.Time `json:"end_date_of_work"`
-	TemperatureThreshold float64   `json:"temperature_threshold" gorm:"default:15;"`
-	HumidityThreshold    float64   `json:"humidity_threshold" gorm:"default:25;"`
-	BrightnessThreshold  float64   `json:"brightness_threshold" gorm:"default:700;"`
-	PostureThreshold     float64   `json:"posture_threshold" gorm:"default:0.5;"`
-	MaxGThreshold        float64   `json:"max_g_threshold" gorm:"default:4;"`
+	ID                   int        `json:"id" gorm:"primaryKey"`
+	Name                 string     `json:"name" gorm:"not null;size:100"`
+	CreatedAt            time.Time  `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	Latitude             float64    `json:"latitude" gorm:"not null;"`
+	Longitude            float64    `json:"longitude" gorm:"not null;"`
+	Address              string     `json:"address" gorm:"size:255"`
+	City                 string     `json:"city" gorm:"not null;size:100"`
+	ZipCode              string     `json:"zip_code" gorm:"not null;size:20"`
+	State                string     `json:"state" gorm:"not null;size:100"`
+	StartAt              time.Time  `json:"start_date_of_work" gorm:"not null"`
+	EndAt                *time.Time `json:"end_date_of_work"`
+	TemperatureThreshold float64    `json:"temperature_threshold" gorm:"default:15;"`
+	HumidityThreshold    float64    `json:"humidity_threshold" gorm:"default:25;"`
+	BrightnessThreshold  float64    `json:"brightness_threshold" gorm:"default:700;"`
+	PostureThreshold     float64    `json:"posture_threshold" gorm:"default:0.5;"`
+	MaxGThreshold        float64    `json:"max_g_threshold" gorm:"default:4;"`
 }
 
 func (w *Worksite) BeforeCreate(tx *gorm.DB) (err error) {
