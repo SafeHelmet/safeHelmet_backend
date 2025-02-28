@@ -184,7 +184,7 @@ func UpdateWorkerAttendance(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, attendance)
+	c.JSON(http.StatusOK, gin.H{"message": "End date updated"})
 }
 
 func DeleteWorker(c *gin.Context) {
