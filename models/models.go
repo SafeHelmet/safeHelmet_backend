@@ -32,8 +32,8 @@ type Worksite struct {
 	State                string    `json:"state" gorm:"not null;size:100"`
 	StartAt              time.Time `json:"start_date_of_work" gorm:"not null"`
 	EndAt                time.Time `json:"end_date_of_work"`
-	TemperatureThreshold float64   `json:"temperature_threshold" gorm:"default:10;"`
-	HumidityThreshold    float64   `json:"humidity_threshold" gorm:"default:10;"`
+	TemperatureThreshold float64   `json:"temperature_threshold" gorm:"default:15;"`
+	HumidityThreshold    float64   `json:"humidity_threshold" gorm:"default:25;"`
 	BrightnessThreshold  float64   `json:"brightness_threshold" gorm:"default:700;"`
 	PostureThreshold     float64   `json:"posture_threshold" gorm:"default:0.5;"`
 	MaxGThreshold        float64   `json:"max_g_threshold" gorm:"default:4;"`
