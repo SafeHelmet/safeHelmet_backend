@@ -36,6 +36,22 @@ func CheckRecentAnomaly(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	// Ottieni l'attendance del casco
+	var attendance models.WorkerAttendance
+	if err := db.Where("helmet_id = ?", helmetId).Last(&attendance).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Ritorna le reading di altre attendances o quelle generate da te ma non dal gas
+	var anomaliesToNotify []models.Reading
+	for _, reading := range readings {
+		if reading.AttendanceID != attendance.ID || (!reading.Methane && !reading.CarbonMonoxide && !reading.SmokeDetection) {
+			anomaliesToNotify = append(anomaliesToNotify, reading)
+		}
+	}
+
 	// Restituisci il risultato
-	c.JSON(http.StatusOK, gin.H{"Anomalies": len(readings)})
+	c.JSON(http.StatusOK, gin.H{"Anomalies": len(anomaliesToNotify)})
 }
