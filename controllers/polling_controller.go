@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"safecap_backend/models"
 	"time"
@@ -51,6 +52,13 @@ func CheckRecentAnomaly(c *gin.Context) {
 			anomaliesToNotify = append(anomaliesToNotify, reading)
 		}
 	}
+
+	// Log per il debug
+	log.Printf("Helmet ID: %s", helmetId)
+	log.Printf("Worksite ID: %d", worksite.ID)
+	log.Printf("Attendance ID: %d", attendance.ID)
+	log.Printf("Number of readings found: %d", len(readings))
+	log.Printf("Number of anomalies to notify: %d", len(anomaliesToNotify))
 
 	// Restituisci il risultato
 	c.JSON(http.StatusOK, gin.H{"Anomalies": len(anomaliesToNotify)})
