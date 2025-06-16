@@ -1,7 +1,7 @@
 name: Build Go Backend Docker Image
 
 on:
-  pull_request:
+  push:
     branches:
       - main # O il nome del tuo branch principale
 
