@@ -22,15 +22,22 @@ controllers.InitDatabase(db)
 var count int64
 qCount :=db.Model(&models.HelmetCategory{}).Count(&count)
 log.Println("QUERY COUNT RETURNS: ", qCount)
-if err := db.Model(&models.HelmetCategory{}).Count(&count); err == 0 {
-log.Println("Database need to be seeded!")
-utils.DeleteTables(db)
-err := utils.SeedDatabase(db)
-if err != nil {
-log.Fatal("Failed to seed database:", err)
+if err := db.Model(&models.HelmetCategory{}).Count(&count); err == nil {
+  log.Println("Database need to be seeded!")
 }
-log.Println("Database seeded successfully")
+
+
+if count == 0 {
+  log.Println("Starting seeding")
+  utils.DeleteTables(db)
+  err := utils.SeedDatabase(db)
+  if err != nil {
+    log.Fatal("Failed to seed database:", err)
+  }
+  log.Println("Database seeded successfully")
 }
+
+
 
 // Avvia il scheduler per la chiamata API in una goroutine
 go API.StartAPICallScheduler(db)
