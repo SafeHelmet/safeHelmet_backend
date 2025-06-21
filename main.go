@@ -2,7 +2,6 @@ package main
 
 import (
 "log"
-"os"
 "safecap_backend/API"
 "safecap_backend/config"
 "safecap_backend/controllers"
@@ -20,7 +19,7 @@ controllers.InitDatabase(db)
 
 
 var helmets []models.HelmetCategory
-var count int
+var count int64
 if err := db.Find(&helmets).Count(&count).Error; err != nil {
 log.Println("Database need to be seeded!")
 utils.DeleteTables(db)
