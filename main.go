@@ -8,8 +8,6 @@ import (
 	"safecap_backend/controllers"
 	"safecap_backend/routes"
 	"safecap_backend/utils"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -18,11 +16,6 @@ func main() {
 	// Verifica se è stato passato un argomento da riga di comando
 	if len(os.Args) >= 2 {
 		toseed = os.Args[1]
-	}
-
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
 	}
 
 	db := config.ConnectToDB(config.GetDSN())
