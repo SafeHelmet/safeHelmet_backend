@@ -20,7 +20,9 @@ controllers.InitDatabase(db)
 
 
 var count int64
-if err := db.Model(&models.HelmetCategory{}).Count(&count); err == nil {
+qCount :=db.Model(&models.HelmetCategory{}).Count(&count)
+log.Println("QUERY COUNT RETURNS: ", qCount)
+if err := db.Model(&models.HelmetCategory{}).Count(&count); err == 0 {
 log.Println("Database need to be seeded!")
 utils.DeleteTables(db)
 err := utils.SeedDatabase(db)
